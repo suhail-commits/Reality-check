@@ -9,7 +9,7 @@ export {
   type Models,
 } from "./model.js";
 export { interview } from "./stages/interview.js";
-export { extract, findCompetitors } from "./stages/extract.js";
+export { extract, findCompetitors, quoteAppearsIn } from "./stages/extract.js";
 export { gatherBothWaves } from "./stages/gather.js";
 export { writeProse } from "./stages/prose.js";
 export { MemoryStore } from "./store.js";

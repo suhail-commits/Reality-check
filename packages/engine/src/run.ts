@@ -111,6 +111,14 @@ export async function run(
     if (extracted.degraded) {
       emit({ type: "degraded", stage: "extract", at: deps.now(), reason: extracted.degraded });
     }
+    if (extracted.paraphrased > 0) {
+      emit({
+        type: "degraded",
+        stage: "extract",
+        at: deps.now(),
+        reason: `${extracted.paraphrased} quotes dropped - not found in the source`,
+      });
+    }
 
     const complaints = extracted.evidence.filter((e) => e.kind === "complaint").length;
     const praise = extracted.evidence.filter((e) => e.kind === "praise").length;

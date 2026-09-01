@@ -57,6 +57,29 @@ interface RawRow {
   barrier?: string;
 }
 
+/**
+ * Does this quote actually appear in the item it claims to come from?
+ *
+ * The prompt says "verbatim, never paraphrase, never invent" -- and until this
+ * existed, nothing checked. The URL is enforced structurally, the row is
+ * enforced by the schema, and the rendered prose is enforced by the citation
+ * pass; the quote itself was the last thing running on the model's honour.
+ *
+ * That matters most on cheap and free models, which paraphrase to be helpful.
+ * A tidied-up quote is a fabricated one: the reader clicks through expecting to
+ * find those words on the page, and they are not there.
+ *
+ * Whitespace and case are normalised because wrapping and capitalisation carry
+ * no meaning; the words themselves must match.
+ */
+const normalize = (text: string) => text.toLowerCase().replace(/\s+/g, " ").trim();
+
+export function quoteAppearsIn(quote: string, item: RawItem): boolean {
+  const needle = normalize(quote);
+  if (needle.length < 8) return false;
+  return normalize(`${item.title ?? ""} ${item.text}`).includes(needle);
+}
+
 const numbered = (items: RawItem[]) =>
   items
     .map((it, i) => `[${i}] ${it.title ? `${it.title} - ` : ""}${it.text.slice(0, 600)}`)
@@ -86,6 +109,8 @@ export interface ExtractResult {
   competitors: Competitor[];
   marketShape: MarketShape;
   degraded: string | null;
+  /** Rows dropped because the quote was not in the source. Surfaced in the trace. */
+  paraphrased: number;
 }
 
 /**
@@ -135,6 +160,7 @@ export async function extract(
 
   let degraded: string | null = null;
   let marketShape: MarketShape = "unknown";
+  let paraphrased = 0;
 
   const batchable = items.filter((i) => i.text.length >= 40).slice(0, 60);
 
@@ -149,6 +175,12 @@ export async function extract(
     for (const row of rows) {
       const item = typeof row.item === "number" ? batchable[row.item] : undefined;
       if (!item || !row.quote) continue;
+
+      // A paraphrased quote is a fabricated one. Drop the row, keep the run.
+      if (!quoteAppearsIn(row.quote, item)) {
+        paraphrased++;
+        continue;
+      }
 
       const competitorName = row.competitor ?? item.competitorId;
       const competitorId = competitorName ? slug(competitorName) : undefined;
@@ -210,5 +242,5 @@ export async function extract(
     // `unknown` implies no structural barriers, which is the neutral default.
   }
 
-  return { evidence, competitors, marketShape, degraded };
+  return { evidence, competitors, marketShape, degraded, paraphrased };
 }
