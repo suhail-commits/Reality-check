@@ -94,7 +94,7 @@ Works with no API keys at all — it will gather from Hacker News and GitHub, th
 that it cannot judge without a model to read what it found.
 
 ```bash
-pnpm test        # 170 tests
+pnpm test        # 182 tests
 pnpm typecheck   # tsc -b, packages and the web app
 pnpm evals       # 15 historical cases
 pnpm web         # the app on localhost:3000
