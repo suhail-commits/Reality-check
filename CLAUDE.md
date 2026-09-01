@@ -221,7 +221,9 @@ Walking skeleton — something clickable at step 4, then every step replaces a f
 v2: `reddit`, `search`, `appstore`, `packages`, `trends`; durable run execution; observability;
 scheduled refresh; semantic dedup.
 
-**Current state: nothing built. Design doc only.**
+**Current state: v1 complete.** All eight steps built, 170 tests green. The one piece not
+written is the Postgres-backed `MarketStore`; in-memory and JSON-file implementations exist
+behind the same interface.
 
 ---
 

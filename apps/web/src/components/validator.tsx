@@ -1,14 +1,20 @@
 "use client";
 
-import type { TraceEvent } from "@rc/shared";
+import type { Dossier, TraceEvent, Validation } from "@rc/shared";
 import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { MarketMatch, SampleBadge } from "./chrome";
 import { TraceView } from "./trace-view";
 import { VerdictCard } from "./verdict-card";
-import { DOG_DOSSIER, DOG_VALIDATION } from "@/fixtures/sample";
 
 type Phase = "idle" | "interview" | "running" | "done";
+
+export interface RunPayload {
+  /** True when the server replayed a recorded run instead of gathering live. */
+  sample: boolean;
+  validation: Validation;
+  dossier: Dossier;
+}
 
 /**
  * Three questions, each answerable by tapping. The interview is not a form to
@@ -22,66 +28,105 @@ const QUESTIONS = [
   {
     id: "payer",
     q: "Who actually pays for this?",
-    options: ["Dog owners, per walk", "The walkers, as a subscription", "Nobody yet - it's free"],
+    options: ["The end user, per month", "Their employer", "Nobody yet - it's free"],
   },
   {
     id: "alternative",
     q: "What do they do today instead?",
-    options: ["Use Rover or Wag", "Ask a neighbour", "Nothing - they just worry"],
+    options: ["Use an existing tool", "A spreadsheet", "Nothing - they just put up with it"],
   },
   {
     id: "inaction",
     q: "What happens if they never solve it?",
-    options: ["They keep using something they distrust", "They stop paying for walks", "Not much"],
+    options: ["They keep paying for something they dislike", "They lose money", "Not much"],
   },
 ] as const;
 
+/**
+ * Reads the run as it happens.
+ *
+ * The stream carries named frames: `trace` for each TraceEvent, one `result`
+ * with the verdict and its evidence, and `failed` if something outside the
+ * engine broke. The engine itself degrades rather than throwing, so `failed`
+ * should be rare -- but a stream that can end without saying anything would
+ * leave the page spinning forever.
+ */
 function useTraceStream() {
   const [events, setEvents] = useState<TraceEvent[]>([]);
+  const [payload, setPayload] = useState<RunPayload | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const abort = useRef<AbortController | null>(null);
 
-  const run = useCallback(async (onDone: () => void) => {
-    setEvents([]);
-    abort.current?.abort();
-    const controller = new AbortController();
-    abort.current = controller;
+  const start = useCallback(
+    async (
+      body: { ideaText: string; answers: Record<string, string> },
+      onDone: () => void,
+    ): Promise<void> => {
+      setEvents([]);
+      setPayload(null);
+      setError(null);
+      abort.current?.abort();
+      const controller = new AbortController();
+      abort.current = controller;
 
-    const res = await fetch("/api/validate", { signal: controller.signal });
-    if (!res.body) return;
+      try {
+        const res = await fetch("/api/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
+        if (!res.body) throw new Error("no response body");
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
 
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
 
-      const chunks = buffer.split("\n\n");
-      buffer = chunks.pop() ?? "";
+          const chunks = buffer.split("\n\n");
+          buffer = chunks.pop() ?? "";
 
-      for (const chunk of chunks) {
-        if (chunk.startsWith("event: end")) continue;
-        const line = chunk.split("\n").find((l) => l.startsWith("data: "));
-        if (!line) continue;
-        const raw = JSON.parse(line.slice(6)) as TraceEvent & { at: string };
-        setEvents((prev) => [...prev, { ...raw, at: new Date(raw.at) } as TraceEvent]);
+          for (const chunk of chunks) {
+            const name = chunk.match(/^event: (\w+)/)?.[1];
+            const line = chunk.split("\n").find((l) => l.startsWith("data: "));
+            if (!name || !line) continue;
+
+            const data = JSON.parse(line.slice(6)) as Record<string, unknown>;
+
+            if (name === "trace") {
+              const raw = data as unknown as TraceEvent & { at: string };
+              setEvents((prev) => [...prev, { ...raw, at: new Date(raw.at) } as TraceEvent]);
+            } else if (name === "result") {
+              setPayload(data as unknown as RunPayload);
+            } else if (name === "failed") {
+              setError(String(data.message ?? "the run failed"));
+            }
+          }
+        }
+      } catch (e) {
+        if ((e as Error).name !== "AbortError") {
+          setError(e instanceof Error ? e.message : "the run failed");
+        }
       }
-    }
 
-    onDone();
-  }, []);
+      onDone();
+    },
+    [],
+  );
 
   const stop = useCallback(() => abort.current?.abort(), []);
-  return { events, run, stop };
+  return { events, payload, error, start, stop };
 }
 
 export function Validator() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [idea, setIdea] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const { events, run, stop } = useTraceStream();
+  const { events, payload, error, start, stop } = useTraceStream();
 
   const match = events.find((e) => e.type === "market_matched");
 
@@ -91,12 +136,12 @@ export function Validator() {
     setAnswers({});
   };
 
-  const start = () => {
+  const begin = () => {
     setPhase("running");
-    void run(() => setPhase("done"));
+    void start({ ideaText: idea, answers }, () => setPhase("done"));
   };
 
-  if (phase === "done") {
+  if (phase === "done" && payload) {
     return (
       <div className="space-y-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -107,7 +152,7 @@ export function Validator() {
           >
             Check another idea
           </button>
-          <SampleBadge />
+          {payload.sample ? <SampleBadge /> : null}
         </div>
 
         {match?.type === "market_matched" ? (
@@ -119,17 +164,34 @@ export function Validator() {
           />
         ) : null}
 
-        <VerdictCard validation={DOG_VALIDATION} dossier={DOG_DOSSIER} />
+        <VerdictCard validation={payload.validation} dossier={payload.dossier} />
 
         <footer className="border-t border-[var(--color-rule)] pt-6 text-sm text-[var(--color-ink-faint)]">
           Shareable link:{" "}
           <Link
-            href={`/v/${DOG_VALIDATION.id}`}
+            href={`/v/${payload.validation.id}`}
             className="underline decoration-dotted underline-offset-4 hover:text-[var(--color-ink)]"
           >
-            /v/{DOG_VALIDATION.id}
+            /v/{payload.validation.id}
           </Link>
         </footer>
+      </div>
+    );
+  }
+
+  if (phase === "done") {
+    return (
+      <div className="space-y-4">
+        <p className="text-[var(--color-dont)]">
+          The run failed{error ? `: ${error}` : " before it produced a verdict."}
+        </p>
+        <button
+          type="button"
+          onClick={reset}
+          className="text-sm underline decoration-dotted underline-offset-4"
+        >
+          Try again
+        </button>
       </div>
     );
   }
@@ -177,9 +239,7 @@ export function Validator() {
                     <button
                       key={o}
                       type="button"
-                      onClick={() =>
-                        setAnswers((a) => ({ ...a, [q.id]: picked ? "" : o }))
-                      }
+                      onClick={() => setAnswers((a) => ({ ...a, [q.id]: picked ? "" : o }))}
                       className={`rounded-full border px-3.5 py-1.5 text-sm transition ${
                         picked
                           ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--color-paper)]"
@@ -198,7 +258,7 @@ export function Validator() {
         <div className="flex items-center gap-4">
           <button
             type="button"
-            onClick={start}
+            onClick={begin}
             className="rounded-lg bg-[var(--color-ink)] px-5 py-2.5 font-medium text-[var(--color-paper)] transition hover:opacity-90"
           >
             {answered === 0 ? "Skip and check anyway" : "Check it"}

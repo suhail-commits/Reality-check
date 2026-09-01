@@ -23,12 +23,18 @@ importers:
 
   apps/web:
     dependencies:
+      '@rc/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
       '@rc/rubric':
         specifier: workspace:*
         version: link:../../packages/rubric
       '@rc/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@rc/sources':
+        specifier: workspace:*
+        version: link:../../packages/sources
       next:
         specifier: ^15.1.0
         version: 15.5.24(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

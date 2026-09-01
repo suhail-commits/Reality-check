@@ -1,4 +1,4 @@
-import type { Dossier, IdeaSpec, SourceId, TraceEvent } from "@rc/shared";
+import type { Dossier, IdeaSpec, SourceId, TraceEvent, Validation } from "@rc/shared";
 import type { Fetcher, SourceAdapter } from "@rc/sources";
 import type { Models } from "./model.js";
 
@@ -17,6 +17,9 @@ export interface MarketStore {
   create(market: Omit<MarketRecord, "id">): Promise<MarketRecord>;
   dossier(marketId: string): Promise<Dossier | null>;
   saveDossier(dossier: Dossier): Promise<void>;
+  /** Backs /v/[id]. A verdict URL that 404s is not a shareable artifact. */
+  saveValidation?(validation: Validation, dossier: Dossier): Promise<void>;
+  validation?(id: string): Promise<{ validation: Validation; dossier: Dossier } | null>;
 }
 
 /**

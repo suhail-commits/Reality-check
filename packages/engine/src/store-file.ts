@@ -1,14 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { Dossier } from "@rc/shared";
+import { Dossier, Validation } from "@rc/shared";
 import type { MarketRecord, MarketStore } from "./types.js";
 
 interface Persisted {
   markets: MarketRecord[];
   dossiers: Record<string, unknown>;
+  validations: Record<string, unknown>;
 }
 
-const EMPTY: Persisted = { markets: [], dossiers: {} };
+const EMPTY: Persisted = { markets: [], dossiers: {}, validations: {} };
 
 /**
  * A JSON file on disk.
@@ -30,10 +31,14 @@ export class FileStore implements MarketStore {
     if (this.cache) return this.cache;
     try {
       const parsed = JSON.parse(await readFile(this.path, "utf8")) as Persisted;
-      this.cache = { markets: parsed.markets ?? [], dossiers: parsed.dossiers ?? {} };
+      this.cache = {
+        markets: parsed.markets ?? [],
+        dossiers: parsed.dossiers ?? {},
+        validations: parsed.validations ?? {},
+      };
     } catch {
       // A missing or corrupt store is an empty store, never a failed run.
-      this.cache = { ...EMPTY };
+      this.cache = { markets: [], dossiers: {}, validations: {} };
     }
     return this.cache;
   }
@@ -67,6 +72,23 @@ export class FileStore implements MarketStore {
     const data = await this.load();
     data.dossiers[dossier.marketId] = dossier;
     await this.flush();
+  }
+
+  async saveValidation(validation: Validation, dossier: Dossier): Promise<void> {
+    const data = await this.load();
+    data.validations[validation.id] = { validation, dossier };
+    await this.flush();
+  }
+
+  async validation(id: string): Promise<{ validation: Validation; dossier: Dossier } | null> {
+    const raw = (await this.load()).validations[id] as
+      | { validation: unknown; dossier: unknown }
+      | undefined;
+    if (!raw) return null;
+
+    const v = Validation.safeParse(raw.validation);
+    const d = Dossier.safeParse(raw.dossier);
+    return v.success && d.success ? { validation: v.data, dossier: d.data } : null;
   }
 
   /** Everything stored, for the CLI to list what has been seeded. */

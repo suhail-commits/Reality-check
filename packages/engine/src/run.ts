@@ -177,6 +177,8 @@ export async function run(
     createdAt: now,
   };
 
+  await deps.store.saveValidation?.(validation, dossier);
+
   emit({
     type: "verdict",
     at: deps.now(),
