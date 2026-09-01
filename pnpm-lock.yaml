@@ -52,6 +52,15 @@ importers:
         specifier: ^4.0.0
         version: 4.3.3
 
+  packages/cli:
+    dependencies:
+      '@rc/engine':
+        specifier: workspace:*
+        version: link:../engine
+      '@rc/shared':
+        specifier: workspace:*
+        version: link:../shared
+
   packages/engine:
     dependencies:
       '@anthropic-ai/sdk':

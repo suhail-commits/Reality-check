@@ -237,3 +237,15 @@ list is why the same mistake is not made twice.
   signal exists to prevent. Replaced with `IMPASSABLE_BARRIER_LOAD = 8` -- two maximum-severity
   barriers plus a minor one. *Exposed by the "consumer neobank from two people, 2024" eval case on
   the harness's first run, which is the entire argument for shipping the harness in v1.*
+
+- **Adapters searched every keyword at once.** `keywords.join(" ")` sent the whole keyword list
+  to HN Algolia and GitHub as a single relevance query. More terms narrows a relevance match
+  rather than widening it, so a six-keyword query returned **nothing** -- and because a failing
+  gather is designed to degrade quietly, this surfaced as an honest-looking `GO FIND OUT` rather
+  than as an error. Adapters now search `keywords[0]` only. The degraded-interview fallback was
+  emitting the raw sentence as `keywords[0]`, which made it worse, so that now emits the three
+  most meaningful words. *Exposed by `pnpm cli validate "a scheduling tool that handles timezones
+  properly"` returning 0 HN results where the same adapter had returned 48 an hour earlier;
+  after the fix, 50 and 30.* The lesson worth keeping: **graceful degradation hides bugs.** A
+  system designed never to crash needs its quiet paths checked against real data, because a silent
+  wrong answer looks exactly like a correct cautious one.

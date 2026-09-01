@@ -10,7 +10,8 @@
     "evals": "vitest run packages/rubric/src/evals",
     "validate": "tsx packages/cli/src/index.ts validate",
     "seed": "tsx packages/cli/src/index.ts seed",
-    "web": "pnpm --filter @rc/web dev"
+    "web": "pnpm --filter @rc/web dev",
+    "cli": "tsx packages/cli/src/index.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

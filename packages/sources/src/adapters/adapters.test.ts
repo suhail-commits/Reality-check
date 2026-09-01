@@ -79,6 +79,32 @@ describe("hn adapter", () => {
     expect(items.every((i) => i.competitorId === undefined)).toBe(true);
   });
 
+  /**
+   * Regression. `keywords.join(" ")` sent HN the whole keyword list as one
+   * relevance query, which narrows the match instead of widening it. Exposed by
+   * `validate "a scheduling tool that handles timezones properly"` returning 0
+   * results where the same adapter had returned 48 the day before.
+   */
+  it("searches the primary keyword only, never every keyword concatenated", async () => {
+    let searched = "";
+    await hn.fetch(
+      { keywords: ["scheduling tool", "calendly", "timezone bug", "meetings"] },
+      {
+        ...ctx(HN_SEARCH),
+        fetch: async (url) => {
+          searched = decodeURIComponent(new URL(url).searchParams.get("query") ?? "");
+          return new Response(JSON.stringify(HN_SEARCH));
+        },
+      },
+    );
+    expect(searched).toBe("scheduling tool");
+    expect(searched).not.toContain("calendly");
+  });
+
+  it("returns nothing rather than searching an empty string", async () => {
+    expect(await hn.fetch({ keywords: [""] }, ctx(HN_SEARCH))).toEqual([]);
+  });
+
   it("throws on a bad status so the registry can record it as failed", async () => {
     await expect(hn.fetch(QUERY, ctx({}, 503))).rejects.toThrow("503");
   });
@@ -125,6 +151,21 @@ describe("github adapter", () => {
       },
     });
     expect(headers?.["User-Agent"]).toBeTruthy();
+  });
+
+  it("searches the primary keyword only, never every keyword concatenated", async () => {
+    let searched = "";
+    await github.fetch(
+      { keywords: ["scheduling tool", "calendly", "timezone bug"] },
+      {
+        ...ctx(GITHUB_SEARCH),
+        fetch: async (url) => {
+          searched = decodeURIComponent(new URL(url).searchParams.get("q") ?? "");
+          return new Response(JSON.stringify(GITHUB_SEARCH));
+        },
+      },
+    );
+    expect(searched).toBe("scheduling tool");
   });
 
   it("throws on a bad status so the registry can record it as failed", async () => {

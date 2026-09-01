@@ -211,6 +211,21 @@ describe("run", () => {
     });
   });
 
+  /**
+   * Regression. The degraded interview used to emit the raw sentence as
+   * keywords[0], which adapters then searched verbatim and matched nothing --
+   * so a missing API key silently became a missing gather.
+   */
+  it("still produces a usable search term when the interview model is down", async () => {
+    const result = await run(
+      { ideaText: "a scheduling tool that handles timezones properly" },
+      deps({ models: { cheap: new BrokenModel(), good: GOOD } }),
+    );
+    const primary = result.spec.keywords[0] as string;
+    expect(primary.split(" ").length).toBeLessThanOrEqual(3);
+    expect(primary).not.toContain("that");
+  });
+
   it("is deterministic for the same inputs", async () => {
     const a = await run({ ideaText: "a better scheduling tool" }, deps());
     const b = await run({ ideaText: "a better scheduling tool" }, deps());

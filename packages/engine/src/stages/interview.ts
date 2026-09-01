@@ -70,9 +70,17 @@ export async function interview(
   }
 }
 
+/**
+ * Search terms when the model is unavailable.
+ *
+ * The primary term is the three most meaningful words, NOT the raw sentence:
+ * adapters search on keywords[0], and a full sentence is a query that matches
+ * nothing. A degraded interview should narrow what we find, not eliminate it.
+ */
 function fallbackKeywords(ideaText: string): string[] {
   const tokens = tokenize(ideaText);
-  return tokens.length > 0 ? [ideaText.trim(), ...tokens.slice(0, 4)] : [ideaText.trim() || "idea"];
+  if (tokens.length === 0) return [ideaText.trim() || "idea"];
+  return [tokens.slice(0, 3).join(" "), ...tokens.slice(0, 4)];
 }
 
 function fallbackSpec(ideaText: string, answers: Partial<Record<string, string>>): IdeaSpec {

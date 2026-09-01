@@ -56,7 +56,11 @@ export const hn: SourceAdapter = {
   enabled: () => true,
 
   async fetch(query, ctx: AdapterContext): Promise<RawItem[]> {
-    const term = query.competitor ?? query.keywords.join(" ");
+    // The FIRST keyword only, never every keyword concatenated. These are
+    // relevance searches: more terms narrows the match rather than widening
+    // it, and a six-term query reliably returns nothing at all.
+    const term = query.competitor ?? query.keywords[0] ?? "";
+    if (term.length === 0) return [];
     const url = `${ENDPOINT}?query=${encodeURIComponent(term)}&tags=(story,comment)&hitsPerPage=${HITS}`;
 
     const res = await ctx.fetch(url, { signal: ctx.signal });

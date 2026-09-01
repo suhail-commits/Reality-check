@@ -13,6 +13,9 @@ export { extract, findCompetitors } from "./stages/extract.js";
 export { gatherBothWaves } from "./stages/gather.js";
 export { writeProse } from "./stages/prose.js";
 export { MemoryStore } from "./store.js";
+export { FileStore } from "./store-file.js";
+export { buildDeps, buildModels, type ConfigReport } from "./config.js";
+export { OpenAICompatibleModel, UnconfiguredModel } from "./openai-compatible.js";
 export {
   lexicalSimilarity,
   tokenize,
