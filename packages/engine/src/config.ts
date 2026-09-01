@@ -1,7 +1,7 @@
 import { ADAPTERS, cached, DiskCache, type Fetcher } from "@rc/sources";
 import { join } from "node:path";
 import { AnthropicModel } from "./anthropic.js";
-import type { Models } from "./model.js";
+import type { LanguageModel, Models } from "./model.js";
 import { OpenAICompatibleModel, UnconfiguredModel } from "./openai-compatible.js";
 import { FileStore } from "./store-file.js";
 import type { EngineDeps } from "./types.js";
@@ -14,13 +14,31 @@ export interface ConfigReport {
   warnings: string[];
 }
 
+function openAICompatible(
+  env: NodeJS.ProcessEnv,
+  prefix: "CHEAP" | "PROSE",
+): LanguageModel | null {
+  const key = env[`${prefix}_API_KEY`];
+  const baseUrl = env[`${prefix}_BASE_URL`];
+  const model = env[`${prefix}_MODEL`];
+  // No model id is invented here. Free tiers retire model names regularly, and
+  // a wrong guess fails at request time with a confusing error rather than at
+  // startup with a clear one.
+  return key && baseUrl && model ? new OpenAICompatibleModel(model, baseUrl, key) : null;
+}
+
 /**
- * Builds the engine's dependencies from the environment.
+ * Builds both model tiers from the environment.
  *
- * Every piece is optional. A missing cheap-tier key does not stop a run; it
- * makes one that degrades honestly and lands on GO FIND OUT. This is the same
- * rule the adapters follow, applied one level up: configuration that is absent
- * lowers what the system can claim, rather than preventing it from running.
+ * Every piece is optional, and the resolution order is designed so that **one
+ * free key runs the whole system**: set the `CHEAP_*` trio and the prose tier
+ * reuses it. Configure `PROSE_*` separately only when you want a better writer
+ * for the one call per run that a person actually reads.
+ *
+ * A missing tier does not stop a run. It makes one that degrades honestly and
+ * lands on GO FIND OUT -- the same rule the adapters follow, one level up:
+ * configuration that is absent lowers what the system can claim rather than
+ * preventing it from running.
  */
 export function buildModels(env: NodeJS.ProcessEnv = process.env): {
   models: Models;
@@ -28,28 +46,22 @@ export function buildModels(env: NodeJS.ProcessEnv = process.env): {
 } {
   const warnings: string[] = [];
 
-  const key = env.CHEAP_API_KEY;
-  const baseUrl = env.CHEAP_BASE_URL;
-  const model = env.CHEAP_MODEL;
-
-  // No default model id is invented here. Free tiers retire model names
-  // regularly, and a wrong guess fails at request time with a confusing error
-  // rather than at startup with a clear one.
-  const cheap =
-    key && baseUrl && model
-      ? new OpenAICompatibleModel(model, baseUrl, key)
-      : new UnconfiguredModel("cheap tier");
-
+  const cheap = openAICompatible(env, "CHEAP") ?? new UnconfiguredModel("cheap tier");
   if (cheap instanceof UnconfiguredModel) {
     warnings.push(
       "Cheap tier unset. Set CHEAP_API_KEY, CHEAP_BASE_URL and CHEAP_MODEL to enable the interview and extraction stages.",
     );
   }
 
-  const hasAnthropic = Boolean(env.ANTHROPIC_API_KEY || env.ANTHROPIC_AUTH_TOKEN);
-  const good = hasAnthropic ? new AnthropicModel() : new UnconfiguredModel("prose tier");
-  if (!hasAnthropic) {
-    warnings.push("ANTHROPIC_API_KEY unset. Verdicts will have evidence but no written explanation.");
+  // Explicit prose provider, then Anthropic if a key happens to be present,
+  // then fall back to the cheap tier so a single key runs everything.
+  const good =
+    openAICompatible(env, "PROSE") ??
+    (env.ANTHROPIC_API_KEY || env.ANTHROPIC_AUTH_TOKEN ? new AnthropicModel() : null) ??
+    (cheap instanceof UnconfiguredModel ? new UnconfiguredModel("prose tier") : cheap);
+
+  if (good instanceof UnconfiguredModel) {
+    warnings.push("No prose model. Verdicts will have evidence but no written explanation.");
   }
 
   return { models: { cheap, good }, report: { cheap: cheap.id, good: good.id, warnings } };

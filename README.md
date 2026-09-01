@@ -54,6 +54,9 @@ Three more guarantees are enforced in code rather than requested in a prompt:
   our own retrieved item. A hallucinated citation is unrepresentable, not merely discouraged.
 - **Every extracted row is parsed against a schema and dropped if it fails.** A bad classification
   costs one row, not the run.
+- **Every quote is checked against its source text.** A paraphrased quote is a fabricated one —
+  the reader clicks through expecting those words and does not find them — so rows that fail
+  are dropped and counted.
 - **Every sentence without a resolvable evidence id is deleted before render** — silently, per
   sentence, and only for ids that actually exist. Silent because a flagged claim is still a claim
   to a reader who cannot audit it, and that reader is exactly who this is for.
@@ -103,16 +106,34 @@ pnpm web         # the app on localhost:3000
 
 Everything is optional. A missing key lowers what the system can claim rather than stopping it.
 
+**It runs on one free API key.** Copy `.env.example` to `.env.local`, get a key from
+[Google AI Studio](https://aistudio.google.com/apikey), and fill in three variables:
+
+```bash
+CHEAP_API_KEY=your-key
+CHEAP_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+CHEAP_MODEL=<the current Flash model id from your provider's model list>
+```
+
+That is the whole setup. The prose tier reuses the cheap tier unless configured separately.
+
 | Variable | For | If unset |
 |---|---|---|
 | `CHEAP_API_KEY`, `CHEAP_BASE_URL`, `CHEAP_MODEL` | Interview, extraction, classification (~90% of tokens) | No interview and no extraction, so runs land on `GO FIND OUT` |
-| `ANTHROPIC_API_KEY` | The verdict prose, one call per run | Verdicts keep their evidence but have no written explanation |
-| `GITHUB_TOKEN` | Raises the GitHub rate limit | Unauthenticated search, which is enough for v1 |
+| `PROSE_*` | A better writer for the one explanation call per run | Reuses the cheap tier |
+| `ANTHROPIC_API_KEY` | Prose via Claude Haiku 4.5, if you want to pay for it | Not used |
+| `GITHUB_TOKEN` | Raises the GitHub rate limit | Unauthenticated search, enough for v1 |
 
-The cheap tier is any OpenAI-compatible endpoint — Groq, OpenRouter, DeepSeek, Gemini — so
-switching providers is three environment variables. No model id is defaulted, because free tiers
-retire model names and a wrong guess fails confusingly at request time instead of clearly at
-startup.
+Both tiers take any OpenAI-compatible `/chat/completions` endpoint, so Gemini, Groq, OpenRouter,
+DeepSeek and a local Ollama are three-variable swaps rather than code changes. No model id is
+defaulted: free tiers retire model names, and a stale default fails confusingly at request time
+instead of clearly at startup.
+
+**Why a free model is safe here.** The usual risk with a cheap extractor is that it paraphrases a
+quote to read better, producing evidence whose words are not on the page it links to. Every quote
+is checked against its source text and dropped if it is not there, and the number dropped is
+reported in the trace. Verifying the extractor turned out to be a better investment than paying
+for a smarter one.
 
 ```bash
 pnpm cli config    # shows what is configured and what is missing
