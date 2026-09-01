@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+.DS_Store
+
+# SQLite database and the on-disk adapter response cache.
+.data/
+.cache/
+
+# Local env - deny everything, then allow the committed template back in.
+# `.env` and `.env.local` alone would still let `.env.production` through.
+.env*
+!.env.example
+
+.vercel/
+coverage/
+.neon
+
+# Local backups of hand-edited docs.
+*.bak
