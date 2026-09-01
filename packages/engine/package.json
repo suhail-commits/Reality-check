@@ -1,0 +1,17 @@
+{
+  "name": "@rc/engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.0",
+    "@rc/rubric": "workspace:*",
+    "@rc/shared": "workspace:*",
+    "@rc/sources": "workspace:*"
+  }
+}
