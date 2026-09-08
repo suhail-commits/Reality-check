@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, type ComponentPropsWithoutRef } from "react";
+import React, { useEffect, useRef, type ComponentPropsWithoutRef } from "react";
 
 /**
  * Vendored from Magic UI (https://magicui.design/docs/components/particles).
@@ -19,23 +19,30 @@ import React, { useEffect, useRef, useState, type ComponentPropsWithoutRef } fro
  * the static dot pattern gives up.
  */
 
-interface MousePosition {
-  x: number;
-  y: number;
-}
-
-function useMousePosition(): MousePosition {
-  const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
+/**
+ * Cursor position in a ref, not in state.
+ *
+ * The published component holds it in `useState`, so every mousemove event
+ * re-renders the component -- roughly sixty React renders a second while the
+ * pointer is moving. That is tolerable for one hero-sized instance and is not
+ * tolerable for a layer mounted across the whole app, which is what this is now.
+ *
+ * The animation loop already runs every frame and can simply read the latest
+ * value, so the render is pure waste. One listener, one ref write, no renders.
+ */
+function useMouseRef() {
+  const position = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({ x: event.clientX, y: event.clientY });
+      position.current.x = event.clientX;
+      position.current.y = event.clientY;
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  return mousePosition;
+  return position;
 }
 
 interface ParticlesProps extends ComponentPropsWithoutRef<"div"> {
@@ -99,7 +106,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const context = useRef<CanvasRenderingContext2D | null>(null);
   const circles = useRef<Circle[]>([]);
-  const mousePosition = useMousePosition();
+  const mousePointer = useMouseRef();
   const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio : 1;
@@ -126,10 +133,6 @@ export const Particles: React.FC<ParticlesProps> = ({
       window.removeEventListener("resize", handleResize);
     };
   }, [color]);
-
-  useEffect(() => {
-    onMouseMoveRef.current();
-  }, [mousePosition.x, mousePosition.y]);
 
   useEffect(() => {
     initCanvasRef.current();
@@ -197,8 +200,8 @@ export const Particles: React.FC<ParticlesProps> = ({
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const { w, h } = canvasSize.current;
-    const x = mousePosition.x - rect.left - w / 2;
-    const y = mousePosition.y - rect.top - h / 2;
+    const x = mousePointer.current.x - rect.left - w / 2;
+    const y = mousePointer.current.y - rect.top - h / 2;
     if (x < w / 2 && x > -w / 2 && y < h / 2 && y > -h / 2) {
       mouse.current.x = x;
       mouse.current.y = y;
@@ -211,6 +214,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   };
 
   const animate = () => {
+    onMouseMoveRef.current();
     clearContext();
     circles.current.forEach((circle, i) => {
       const edge = [

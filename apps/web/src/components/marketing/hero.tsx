@@ -1,12 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Particles } from "@/components/magic/particles";
 import { DURATION, EASE, usePrefersReducedMotion } from "@/lib/motion";
 import { MagneticButton } from "./primitives";
 
 /**
  * The hero is about the product, and only about the product.
+ *
+ * The particle field it used to own now lives in the root layout as one fixed
+ * canvas for the whole app, so the hero is type and air. That is the editorial
+ * answer rather than a concession: the globe further down stays the page's one
+ * large visual moment instead of competing with something on the first screen.
  *
  * An earlier version opened with an example idea set at 140px, which read as
  * though the example *was* the company. A landing page has to answer "what is
@@ -37,27 +41,6 @@ export function Hero() {
       id="top"
       className="relative flex min-h-[94svh] flex-col justify-center overflow-hidden pt-36 pb-28"
     >
-      {/*
-       * Sparse and slow. `staticity` high so the field leans toward the cursor
-       * rather than chasing it, which is the difference between depth and a toy.
-       *
-       * The colour and alpha floor are not the library's defaults, and cannot
-       * be: those are set for white dots on black. On ivory the same values
-       * render below the visible threshold.
-       */}
-      {!reduced ? (
-        <Particles
-          className="absolute inset-0"
-          quantity={110}
-          staticity={70}
-          ease={70}
-          size={1.2}
-          color="#5D7A63"
-          alphaRange={[0.35, 0.9]}
-          vy={-0.014}
-        />
-      ) : null}
-
       <div className="relative mx-auto w-full max-w-[76rem] px-6 lg:px-10">
         <motion.p {...rise(0)} className="text-marker">
           Idea Reality Check

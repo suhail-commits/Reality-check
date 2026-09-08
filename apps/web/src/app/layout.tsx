@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { ParticleField } from "@/components/marketing/particle-field";
 import { SmoothScroll } from "@/components/marketing/smooth-scroll";
 import "./globals.css";
 
@@ -29,15 +30,16 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Reality Check",
   description:
-    "Most idea validators tell you what you hoped to hear. This one reads what people actually wrote, links every claim to its source, and will tell you not to build it.",
+    "Tell us your idea and we will tell you where it works. Reality Check reads what people have actually written about your market, finds the gap nobody has closed, and links every claim back to its source.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${mono.variable}`}>
       <body className="min-h-dvh antialiased">
-        {/* Ambient light and grain sit under everything and never intercept clicks. */}
+        {/* Ambient light, particles and grain sit under everything and never intercept clicks. */}
         <div className="ambient" aria-hidden />
+        <ParticleField />
         <div className="grain" aria-hidden />
         <SmoothScroll>
           <div className="relative z-10">{children}</div>
