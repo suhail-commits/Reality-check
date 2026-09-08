@@ -48,6 +48,13 @@ interface ParticlesProps extends ComponentPropsWithoutRef<"div"> {
   color?: string;
   vx?: number;
   vy?: number;
+  /**
+   * Added to the vendored source. The original hardcodes an alpha range of
+   * 0.1-0.7, which is tuned for white dots on black. Sage on ivory at 0.3
+   * resolves to about rgb(213,221,212) against rgb(250,249,246) -- a rounding
+   * error, not a particle. Light grounds need a higher floor.
+   */
+  alphaRange?: [number, number];
 }
 
 function hexToRgb(hex: string): number[] {
@@ -85,6 +92,7 @@ export const Particles: React.FC<ParticlesProps> = ({
   color = "#ffffff",
   vx = 0,
   vy = 0,
+  alphaRange = [0.1, 0.7],
   ...props
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -134,7 +142,9 @@ export const Particles: React.FC<ParticlesProps> = ({
     translateY: 0,
     size: Math.floor(Math.random() * 2) + size,
     alpha: 0,
-    targetAlpha: parseFloat((Math.random() * 0.6 + 0.1).toFixed(1)),
+    targetAlpha: parseFloat(
+      (Math.random() * (alphaRange[1] - alphaRange[0]) + alphaRange[0]).toFixed(2),
+    ),
     dx: (Math.random() - 0.5) * 0.1,
     dy: (Math.random() - 0.5) * 0.1,
     magnetism: 0.1 + Math.random() * 4,

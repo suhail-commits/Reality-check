@@ -40,16 +40,21 @@ export function Hero() {
       {/*
        * Sparse and slow. `staticity` high so the field leans toward the cursor
        * rather than chasing it, which is the difference between depth and a toy.
+       *
+       * The colour and alpha floor are not the library's defaults, and cannot
+       * be: those are set for white dots on black. On ivory the same values
+       * render below the visible threshold.
        */}
       {!reduced ? (
         <Particles
           className="absolute inset-0"
-          quantity={70}
+          quantity={110}
           staticity={70}
           ease={70}
-          size={0.5}
-          color="#7E9B85"
-          vy={-0.012}
+          size={1.2}
+          color="#5D7A63"
+          alphaRange={[0.35, 0.9]}
+          vy={-0.014}
         />
       ) : null}
 
