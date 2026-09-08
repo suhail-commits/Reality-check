@@ -33,17 +33,17 @@ export function Hero() {
       className="relative flex min-h-[92svh] flex-col justify-center pt-32 pb-24"
     >
       <div className="mx-auto w-full max-w-[76rem] px-6 lg:px-10">
-        <motion.h1 {...rise(0)} className="text-display-1 max-w-[14ch] text-balance">
-          It will tell you not to build it.
+        <motion.h1 {...rise(0)} className="text-display-1 max-w-[15ch] text-balance">
+          Tell us your idea. We&rsquo;ll tell you where it works.
         </motion.h1>
 
         <motion.p
           {...rise(0.12)}
-          className="mt-10 max-w-[54ch] text-body-lg text-[var(--color-ink-soft)]"
+          className="mt-10 max-w-[56ch] text-body-lg text-[var(--color-ink-soft)]"
         >
-          Reality Check reads what people have actually written about your market, links every
-          claim back to the page it came from, and reaches its answer with ordinary code instead of
-          an AI&rsquo;s opinion.
+          Reality Check reads what people have actually written about your market and finds the
+          gap nobody has closed. If your idea is aimed at it, we say so. If it isn&rsquo;t, we
+          show you what is &mdash; and every word links back to the page it came from.
         </motion.p>
 
         <motion.div {...rise(0.24)} className="mt-12 flex flex-wrap items-center gap-6">
@@ -57,9 +57,9 @@ export function Hero() {
           {...rise(0.36)}
           className="mt-24 flex flex-wrap items-center gap-x-8 gap-y-3 text-caption text-[var(--color-ink-faint)]"
         >
-          <span>Four questions, asked the same way every time</span>
+          <span>Every answer ends somewhere you can go</span>
           <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
-          <span>Every claim links to its source</span>
+          <span>We say how sure we are, and why</span>
           <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
           <span>Checked against markets whose outcome we already know</span>
         </motion.div>

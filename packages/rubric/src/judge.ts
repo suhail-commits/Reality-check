@@ -1,5 +1,6 @@
 import type { RubricResult, Scores } from "@rc/shared";
 import { computeConfidence } from "./confidence.js";
+import { chooseRedirect } from "./redirect.js";
 import { decide } from "./rules.js";
 import { complaintSignal } from "./signals/complaints.js";
 import { feasibilitySignal } from "./signals/feasibility.js";
@@ -83,5 +84,10 @@ export function judge(input: RubricInput & { wedgeMatchesTopCluster?: boolean })
     reason: decision.reason,
     scores,
     confidence: computeConfidence(evidence, adapterStatuses, now),
+    // Where to aim instead. Derived from the same evidence, by the same pure
+    // function, so the recommendation cannot be hallucinated any more than the
+    // verdict can. Null only when there is nothing to point at, which is the
+    // condition that produces GO FIND OUT anyway.
+    redirect: chooseRedirect(evidence, competitors, statedWedge, now),
   };
 }

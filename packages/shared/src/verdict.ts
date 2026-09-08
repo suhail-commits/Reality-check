@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { AdapterStatus, SourceId } from "./enums.js";
+import { Redirect } from "./redirect.js";
 
 /** Four outcomes. Never a numeric score as the headline. See design doc s5. */
 export const Verdict = z.enum([
@@ -82,5 +83,10 @@ export const RubricResult = z.object({
   firedRule: z.number().int().min(1).max(7),
   /** Plain-language statement of why that rule fired. Not model prose. */
   reason: z.string().min(1),
+  /**
+   * Where to aim instead. Null only when the evidence is too thin to point
+   * anywhere, which is the same condition that produces GO FIND OUT.
+   */
+  redirect: Redirect.nullable(),
 });
 export type RubricResult = z.infer<typeof RubricResult>;

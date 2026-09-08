@@ -88,8 +88,11 @@ and will share a brutal verdict. Deferred decision; does not affect the build.
 2. **The rubric decides, the model writes.** See §8.
 3. **Confidence is an output, not a decoration.** Thin evidence yields
    `GO FIND OUT`, never a bluffed verdict.
-4. **A "no" must be actionable.** Every `DON'T BUILD IT` carries an adjacent
-   opportunity drawn from the same evidence.
+4. **Every answer ends somewhere you can go.** Every verdict except `GO FIND OUT`
+   carries a `Redirect`: the heaviest complaint cluster the user's own angle does
+   not already address, computed by the rubric from the same evidence. It is
+   graded `strong` / `thin` / `speculative` so a weak opening can be reported
+   honestly rather than dressed up, and it cites evidence at every grade.
 5. **Never dead-end on a score.** The user leaves with a decision and a next step.
 
 ---

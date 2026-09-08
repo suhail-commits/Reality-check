@@ -3,7 +3,7 @@
 import { useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { DOG_VALIDATION } from "@/fixtures/sample";
-import { RULE_NAME, VERDICT_STYLE } from "@/lib/verdict";
+import { RULE_NAME, STRENGTH_LABEL, VERDICT_STYLE } from "@/lib/verdict";
 
 const ACCENT_TOKEN: Record<string, string> = {
   BUILD_IT: "var(--color-build)",
@@ -58,8 +58,16 @@ export function VerdictReveal() {
         {style.gloss}
       </p>
 
-      {DOG_VALIDATION.wedge ? (
-        <p className="text-headline mt-12 max-w-[24ch] text-balance">{DOG_VALIDATION.wedge}</p>
+      {DOG_VALIDATION.redirect ? (
+        <div className="mt-14 flex max-w-[34ch] flex-col items-center gap-4">
+          <span className="rounded-full border border-[var(--color-rule)] px-3 py-1 text-caption text-[var(--color-ink-soft)]">
+            Where the opening is · {STRENGTH_LABEL[DOG_VALIDATION.redirect.strength].label}
+          </span>
+          <p className="text-headline text-balance">{DOG_VALIDATION.redirect.theme}</p>
+          <p className="text-caption text-[var(--color-ink-soft)]">
+            {DOG_VALIDATION.redirect.evidenceIds.length} people said so, across two products.
+          </p>
+        </div>
       ) : null}
 
       <div className="mt-14 flex flex-col items-center gap-3">

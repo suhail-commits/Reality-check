@@ -158,6 +158,13 @@ export async function run(
 
   emit({ type: "note", at: deps.now(), text: "Writing the explanation, dropping uncited sentences" });
   const prose = await writeProse(result, dossier.evidence, spec.statedWedge, deps.models.good);
+  if (result.redirect) {
+    emit({
+      type: "note",
+      at: deps.now(),
+      text: `Opening found: ${result.redirect.theme} (${result.redirect.strength})`,
+    });
+  }
   if (prose.degraded) {
     emit({ type: "degraded", stage: "judge", at: deps.now(), reason: prose.degraded });
   }
@@ -179,7 +186,9 @@ export async function run(
     confidence: result.confidence,
     scores: result.scores,
     firedRule: result.firedRule,
-    ...(spec.statedWedge ? { wedge: spec.statedWedge } : {}),
+    // The rubric computed this from the same evidence. The prose stage explains
+    // it; nothing between here and the page may change it.
+    redirect: result.redirect,
     prose: prose.text,
     citedEvidenceIds: prose.citedIds,
     createdAt: now,

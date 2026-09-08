@@ -271,9 +271,16 @@ export const DOG_VALIDATION: Validation = {
     wedgeMatchesTopCluster: false,
   },
   firedRule: 6,
-  wedge: "Fix who shows up at the door, not the booking screen.",
+  redirect: {
+    theme: "you cannot tell if the dog walker is any good",
+    strength: "strong",
+    basis:
+      "3 people raised this across Rover and Wag. A complaint that follows users from one product to the next is a gap none of them has closed.",
+    evidenceIds: ["ev_004", "ev_005", "ev_006"],
+    competitorIds: ["rover", "wag"],
+  },
   prose:
-    "Owners are not short of dog-walking apps and they are not asking for a nicer one. What they complain about, across both Rover and Wag, is that they cannot tell who is turning up at their door [ev_004] [ev_005] [ev_006]. Walkers complain about the other end of the same trade: a twenty percent cut that pushes the competent ones into private arrangements within months [ev_007] [ev_008]. Your stated angle is scheduling and a cleaner interface, and nobody in this evidence is unhappy about either -- booking is one of the few things people actively praise [ev_010] [ev_011]. The market is growing rather than shrinking, and nothing here died for lack of demand, so this is a real opening entered from the wrong side. Build the vetting, not the app.",
+    "Dog owners are not short of apps and they are not asking for a nicer one. What they complain about, across both Rover and Wag, is that they cannot tell who is turning up at their door [ev_004] [ev_005] [ev_006]. The people doing the walking complain about the other end of the same trade: a twenty percent cut that pushes the good ones into private arrangements within months [ev_007] [ev_008]. A cleaner app with better scheduling fixes neither, and booking is one of the few things owners actively praise as it is [ev_010] [ev_011]. The market is growing rather than shrinking, and nothing here died for lack of demand, so the opening is real. Build the trust problem: proof of who is walking the dog, and what happened on the walk [ev_004] [ev_006].",
   citedEvidenceIds: ["ev_004", "ev_005", "ev_006", "ev_007", "ev_008", "ev_010", "ev_011"],
   createdAt: RETRIEVED,
 };
@@ -364,9 +371,16 @@ export const SHORTENER_VALIDATION: Validation = {
     wedgeMatchesTopCluster: false,
   },
   firedRule: 4,
-  wedge: "Nothing here. The adjacent opening is link management inside a CRM, not shortening.",
+  redirect: {
+    theme: "free tiers keep narrowing",
+    strength: "thin",
+    basis:
+      "1 person raised this about Bitly. Real, but check how widely it is felt before betting on it.",
+    evidenceIds: ["sh_004"],
+    competitorIds: ["bitly"],
+  },
   prose:
-    "Five products already do this and the people using them are not unhappy. The overwhelming sentiment is that the problem is finished: Bitly has not failed anyone in fifteen years [sh_002], and TinyURL still works without an account [sh_003]. The only recurring grievance is that free tiers have narrowed [sh_004], which is a pricing complaint rather than a product one, and it is not something a new entrant can undercut for long. Interest is flat to slightly declining. A cleaner dashboard is not a reason to switch away from a link that already works.",
+    "Five products already do this and the people using them are not unhappy. The overwhelming sentiment is that the problem is finished: Bitly has not failed anyone in fifteen years [sh_002], and TinyURL still works without an account [sh_003]. A cleaner dashboard is not a reason to move a link that already works [sh_002]. The one thing anyone does grumble about is free tiers narrowing [sh_004] -- and that is a single voice, not a gap, so treat it as something to check rather than something to build on [sh_004].",
   citedEvidenceIds: ["sh_002", "sh_003", "sh_004"],
   createdAt: RETRIEVED,
 };

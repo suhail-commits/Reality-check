@@ -1,4 +1,4 @@
-import type { ConfidenceBand, Evidence, Verdict } from "@rc/shared";
+import type { ConfidenceBand, Evidence, RedirectStrength, Verdict } from "@rc/shared";
 
 export interface VerdictStyle {
   /** What the user reads. Never a number -- a score invites argument. */
@@ -9,30 +9,61 @@ export interface VerdictStyle {
   textClass: string;
 }
 
+/**
+ * The four outcomes, written as routes rather than rulings.
+ *
+ * Every one of them ends somewhere you can go. That is the product's promise:
+ * you leave knowing what to build, not just whether this particular version of
+ * it survives. Even the hardest answer is "not this one -- here is what the
+ * same evidence points at".
+ */
 export const VERDICT_STYLE: Record<Verdict, VerdictStyle> = {
   BUILD_IT: {
     label: "Build it",
-    gloss: "There is a real gap here, people are asking for it, and you can get in.",
+    gloss: "People are unhappy with what exists, the market is not shrinking, and your angle is aimed at the right thing.",
     accentClass: "accent-build",
     textClass: "text-[var(--color-build)]",
   },
   BUILD_IT_DIFFERENTLY: {
     label: "Build it differently",
-    gloss: "Right market, wrong angle. The opening is not where you think it is.",
+    gloss: "Right market, wrong angle. The opening is real, it is just not where you were looking.",
     accentClass: "accent-differently",
     textClass: "text-[var(--color-differently)]",
   },
   DONT_BUILD_IT: {
-    label: "Don't build it",
-    gloss: "The evidence says no. Here is exactly what it says, and where to go instead.",
+    label: "Not this one",
+    gloss: "The idea as you described it does not work, and here is exactly why. Here is what the same evidence points at instead.",
     accentClass: "accent-dont",
     textClass: "text-[var(--color-dont)]",
   },
   GO_FIND_OUT: {
-    label: "Go find out",
-    gloss: "Not enough evidence to call it. Guessing would be worse than saying so.",
+    label: "Go and check",
+    gloss: "Not enough evidence to call it yet. Guessing would be worse than saying so, so here is what to go and find out.",
     accentClass: "accent-findout",
     textClass: "text-[var(--color-findout)]",
+  },
+};
+
+/**
+ * How much weight to put on an opening.
+ *
+ * The product always shows you somewhere to aim, which would be worthless if it
+ * sounded equally certain every time. Grading the opening is what lets it stay
+ * useful and honest at once -- a thin one is still worth knowing about, as long
+ * as it is labelled thin.
+ */
+export const STRENGTH_LABEL: Record<RedirectStrength, { label: string; note: string }> = {
+  strong: {
+    label: "Well supported",
+    note: "Several people raised this, across more than one product.",
+  },
+  thin: {
+    label: "Worth checking first",
+    note: "Real, but not yet widely felt. Verify before you bet on it.",
+  },
+  speculative: {
+    label: "Our reading, not the market's",
+    note: "Nobody said this outright. It is what the evidence suggests, and it may be wrong.",
   },
 };
 

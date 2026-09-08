@@ -1,5 +1,6 @@
 export { judge } from "./judge.js";
 export { decide, type Decision } from "./rules.js";
+export { chooseRedirect } from "./redirect.js";
 export { computeConfidence } from "./confidence.js";
 export { complaintSignal, type ComplaintSignal } from "./signals/complaints.js";
 export { graveyardSignal, type GraveyardSignal } from "./signals/graveyard.js";

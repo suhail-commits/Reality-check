@@ -16,16 +16,32 @@ Hard rules:
 - Never contradict the verdict. If it says don't build it, do not soften it.
 - No score, no percentage, no rating. Numbers are not yours to give.
 - Plain words. No "leverage", no "synergies", no "in today's fast-paced".
-- 4 to 7 sentences. Lead with what the evidence shows, not with a preamble.`;
+- 4 to 7 sentences. Lead with what the evidence shows, not with a preamble.
+- If you are given somewhere to aim instead, end on it. The reader should
+  finish knowing what to do next, not only what the answer was.`;
 
 const VERDICT_INSTRUCTION: Record<string, string> = {
   BUILD_IT: "Say what the opening is and why their angle fits it.",
   BUILD_IT_DIFFERENTLY:
-    "Say what people are actually unhappy about, and why the user's stated angle misses it. Be direct about the mismatch.",
+    "Say what people are actually unhappy about, and why the user's stated angle misses it. Be direct about the mismatch, then spend most of your words on the opening.",
   DONT_BUILD_IT:
-    "Say plainly why this is a no. Do not soften it, do not hedge, do not end on an encouraging note. Then name one adjacent thing the same evidence points at.",
+    "Say plainly why the idea as stated does not work. Do not soften that. Then move to the opening and end there -- the reader should finish knowing what to do next, not only what not to do.",
   GO_FIND_OUT:
     "Say what is missing rather than guessing. Name what they should go and check.",
+};
+
+/**
+ * How much weight the reader should put on the opening.
+ *
+ * The wording is the rubric's, not the model's. The model may describe an
+ * opening; it may never decide how good one is, because grading it is exactly
+ * the judgement this architecture keeps away from a model.
+ */
+const STRENGTH_NOTE: Record<string, string> = {
+  strong: "This opening is well supported. Say so plainly.",
+  thin: "This opening is real but thinly evidenced. Say it is worth checking before betting on it, and do not oversell it.",
+  speculative:
+    "This is our reading rather than something the market said. Be explicit that it is a guess and say what little supports it. Do not present it as a finding.",
 };
 
 /** Only what the model needs: id, kind, who it is about, and the words. */
@@ -76,6 +92,15 @@ export async function writeProse(
     VERDICT_INSTRUCTION[result.verdict] ?? "",
     wedge ? `The user's own angle: ${wedge}` : "The user did not state an angle.",
     "",
+    ...(result.redirect
+      ? [
+          `Where to aim instead: ${result.redirect.theme}`,
+          `Why: ${result.redirect.basis}`,
+          `Cite these for it: ${result.redirect.evidenceIds.join(" ")}`,
+          STRENGTH_NOTE[result.redirect.strength] ?? "",
+          "",
+        ]
+      : []),
     "Evidence:",
     distill(evidence),
   ].join("\n");

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { AdapterStatus, MarketShape, SourceId } from "./enums.js";
 import { Evidence } from "./evidence.js";
+import { Redirect } from "./redirect.js";
 import { IdeaSpec } from "./idea.js";
 import { Confidence, Scores, Verdict } from "./verdict.js";
 
@@ -47,7 +48,12 @@ export const Validation = z.object({
   confidence: Confidence,
   scores: Scores,
   firedRule: z.number().int().min(1).max(7),
-  wedge: z.string().optional(),
+  /**
+   * Where to build instead. Present for every verdict except GO FIND OUT,
+   * which has too little evidence to point anywhere and carries homework
+   * instead. See `Redirect` for why it is never an uncited sentence.
+   */
+  redirect: Redirect.nullable(),
   prose: z.string(),
   /** Every id here must resolve, or the sentence citing it was dropped. */
   citedEvidenceIds: z.array(z.string().min(1)),

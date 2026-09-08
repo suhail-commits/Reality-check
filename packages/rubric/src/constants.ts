@@ -44,6 +44,14 @@ export const DEATH_RECENCY_MONTHS = 60;
 /** Complaint evidence half-life. Older grievances may already be fixed. */
 export const RECENCY_HALF_LIFE_MONTHS = 24;
 
+/**
+ * Evidence rows a complaint cluster needs before the opening it implies counts
+ * as strong rather than thin. Below this the redirect is still reported -- the
+ * product always shows you where to aim -- but it is labelled as thin so the
+ * reader knows how much weight it carries.
+ */
+export const STRONG_REDIRECT_MIN_EVIDENCE = 3;
+
 /** A theme recurring across this many competitors is a category-level failure. */
 export const RECURRENCE_MIN_COMPETITORS = 2;
 export const RECURRENCE_BONUS = 1.5;

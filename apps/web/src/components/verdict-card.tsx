@@ -1,8 +1,14 @@
 import type { Dossier, Validation } from "@rc/shared";
 import { ConfidencePill } from "./chrome";
 import { SignalGrid } from "./signals";
-import { EvidenceList } from "./evidence";
-import { evidenceById, parseProse, RULE_NAME, VERDICT_STYLE } from "@/lib/verdict";
+import { EvidenceList, EvidenceRow } from "./evidence";
+import {
+  evidenceById,
+  parseProse,
+  RULE_NAME,
+  STRENGTH_LABEL,
+  VERDICT_STYLE,
+} from "@/lib/verdict";
 
 /**
  * The verdict card.
@@ -57,13 +63,8 @@ export function VerdictCard({
         </div>
       </header>
 
-      {validation.wedge ? (
-        <div className="rounded-xl border-l-2 border-[var(--accent)] bg-[var(--color-paper-sunk)] px-5 py-4">
-          <p className="mb-1 text-[11px] font-medium tracking-widest text-[var(--color-ink-faint)] uppercase">
-            {validation.verdict === "DONT_BUILD_IT" ? "Where to go instead" : "The wedge"}
-          </p>
-          <p className="text-lg font-medium text-pretty">{validation.wedge}</p>
-        </div>
+      {validation.redirect ? (
+        <RedirectBlock redirect={validation.redirect} evidence={dossier.evidence} />
       ) : null}
 
       {/*
@@ -100,5 +101,56 @@ export function VerdictCard({
         <EvidenceList evidence={cited} />
       </section>
     </article>
+  );
+}
+
+/**
+ * Where to aim.
+ *
+ * This is the half of the answer people actually act on, so it carries its own
+ * evidence rather than borrowing credibility from the prose above it. The
+ * strength label is not decoration: the product always shows an opening, which
+ * would be worthless if every one of them sounded equally certain.
+ */
+function RedirectBlock({
+  redirect,
+  evidence,
+}: {
+  redirect: NonNullable<Validation["redirect"]>;
+  evidence: Dossier["evidence"];
+}) {
+  const strength = STRENGTH_LABEL[redirect.strength];
+  const backing = redirect.evidenceIds
+    .map((id) => evidence.find((e) => e.id === id))
+    .filter((e): e is NonNullable<typeof e> => Boolean(e));
+
+  return (
+    <section className="rounded-xl border border-[var(--color-rule)] bg-[var(--color-paper-sunk)] p-6">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <p className="text-sm font-medium text-[var(--color-ink-soft)]">Where the opening is</p>
+        <span className="rounded-full border border-[var(--color-rule)] px-2.5 py-0.5 text-xs text-[var(--color-ink-soft)]">
+          {strength.label}
+        </span>
+      </div>
+
+      <p className="mt-4 text-2xl font-medium tracking-tight text-pretty">{redirect.theme}</p>
+      <p className="mt-4 max-w-[62ch] text-[15px] leading-relaxed text-pretty text-[var(--color-ink-soft)]">
+        {redirect.basis}
+      </p>
+      <p className="mt-2 text-xs text-[var(--color-ink-faint)]">{strength.note}</p>
+
+      {backing.length > 0 ? (
+        <details className="group mt-5">
+          <summary className="cursor-pointer list-none text-xs text-[var(--color-ink-faint)] underline decoration-dotted underline-offset-4 [&::-webkit-details-marker]:hidden">
+            {backing.length} {backing.length === 1 ? "source" : "sources"} behind this
+          </summary>
+          <ul className="mt-3 border-t border-[var(--color-rule)] pt-3">
+            {backing.map((e, i) => (
+              <EvidenceRow key={e.id} evidence={e} index={i + 1} />
+            ))}
+          </ul>
+        </details>
+      ) : null}
+    </section>
   );
 }

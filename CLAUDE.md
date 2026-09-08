@@ -1,7 +1,8 @@
 # Idea Reality Check
 
-Tells you whether your product idea is worth building, and shows the receipts. Every claim traces
-to a real, clickable URL. It is willing to say "don't build this".
+Tell it your idea and it tells you where that idea works. It reads what people have written about
+the market, finds the gap nobody has closed, and says whether your angle is aimed at it. Every claim
+traces to a real, clickable URL, and it will say plainly when the idea as stated does not work.
 
 Full design: `reality-check-design.md`. That document is the source of truth — read it before
 proposing anything architectural.
@@ -133,6 +134,13 @@ stop — do not route around it.
 7. **Never silently wrong.** A cache hit states which market it matched and offers a way to reject
    it. The system is allowed to be wrong; it is not allowed to hide it.
 
+8. **Every answer ends somewhere you can go, and says how sure it is.** Every verdict except
+   `GO FIND OUT` carries a `Redirect`. It is computed by `packages/rubric`, never written by a
+   model, and it cites evidence at **every** strength -- `strong`, `thin` and `speculative` alike.
+   Strength grades confidence in the *inference*, never whether a source exists. A redirect with no
+   citation would undo the citation pass, the verbatim-quote check and the rubric's purity in one
+   field.
+
 ---
 
 ## How I work
@@ -169,7 +177,11 @@ The eval harness is the only thing that calibrates `MIN_EVIDENCE`, `MIN_PRAISE` 
 a thin-gather fixture returns `GO FIND OUT`; a high-praise fixture returns `DON'T BUILD IT`. Same
 low complaint count, different verdicts. If they ever agree, invariant 5 has silently reverted.
 
-Airbnb 2008, Dropbox 2007 and Slack 2013 must never come back `DON'T BUILD IT`.
+Airbnb 2008, Dropbox 2007 and Slack 2013 must never come back `DONT_BUILD_IT`.
+
+**Every case that reaches a verdict must point somewhere.** If a market can be judged and the tool
+has nothing to suggest, the product's promise is broken for that market -- and the honest fix is a
+redirect labelled thin, never a missing one.
 
 ## Deciding versus asking
 
@@ -251,3 +263,13 @@ list is why the same mistake is not made twice.
   after the fix, 50 and 30.* The lesson worth keeping: **graceful degradation hides bugs.** A
   system designed never to crash needs its quiet paths checked against real data, because a silent
   wrong answer looks exactly like a correct cautious one.
+
+- **The redirect went silent exactly when the founder was right.** `chooseRedirect` dropped the
+  complaint cluster the user's stated angle already addressed, on the reasoning that telling someone
+  to do what they just said is worthless. But in a market whose *only* grievance is the thing they
+  plan to fix, that leaves nothing to point at and the product's whole promise fails for that
+  market. *Exposed by Dropbox 2007 on the eval harness's first run with the new assertion: the sole
+  complaint was that sync broke, and the founder's plan was sync that works.* Now the matching
+  cluster is ranked last rather than discarded, and when it is all there is the redirect confirms it
+  with the evidence. Worth keeping: **a filter that is right in the common case can be catastrophic
+  in the case the product exists for.**

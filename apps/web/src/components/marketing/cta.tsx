@@ -25,7 +25,7 @@ export function CallToAction() {
       </div>
 
       <p className="mt-8 text-caption text-[var(--color-ink-soft)]">
-        It is willing to say no. Here is one it says no to:{" "}
+        It is willing to say the idea does not work. Here is one where it says so:{" "}
         <Link
           href={`/v/${SHORTENER_VALIDATION.id}`}
           className="underline decoration-dotted underline-offset-4 transition-colors hover:text-[var(--accent)]"

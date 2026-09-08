@@ -14,8 +14,8 @@ const blue = wrap("34");
 const VERDICT_STYLE: Record<Verdict, { label: string; paint: (s: string) => string }> = {
   BUILD_IT: { label: "BUILD IT", paint: green },
   BUILD_IT_DIFFERENTLY: { label: "BUILD IT DIFFERENTLY", paint: amber },
-  DONT_BUILD_IT: { label: "DON'T BUILD IT", paint: red },
-  GO_FIND_OUT: { label: "GO FIND OUT", paint: blue },
+  DONT_BUILD_IT: { label: "NOT THIS ONE", paint: red },
+  GO_FIND_OUT: { label: "GO AND CHECK", paint: blue },
 };
 
 const STAGE_LABEL: Record<string, string> = {
@@ -96,6 +96,22 @@ export function renderVerdict(result: RunResult): void {
     process.stdout.write(`\n${wrapText(result.verdict.prose, 68, "  ")}\n`);
   } else {
     process.stdout.write(dim("\n  (no written explanation - prose model unavailable)\n"));
+  }
+
+  // The opening is the half people act on, so it comes before the arithmetic.
+  const redirect = result.verdict.redirect;
+  if (redirect) {
+    const grade =
+      redirect.strength === "strong"
+        ? green("well supported")
+        : redirect.strength === "thin"
+          ? amber("worth checking first")
+          : dim("our reading, not the market's");
+
+    process.stdout.write(`\n  ${bold("Where the opening is")}  ${grade}\n`);
+    process.stdout.write(`\n${wrapText(redirect.theme, 68, "  ")}\n`);
+    process.stdout.write(dim(`\n${wrapText(redirect.basis, 68, "  ")}\n`));
+    process.stdout.write(dim(`\n  backed by ${redirect.evidenceIds.join(", ")}\n`));
   }
 
   process.stdout.write(`\n  ${bold("Signals")}\n`);
