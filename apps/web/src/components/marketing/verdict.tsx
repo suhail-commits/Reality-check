@@ -13,22 +13,27 @@ const ACCENT_TOKEN: Record<string, string> = {
 };
 
 /**
- * Where the example lands.
+ * Where the run lands, as a band rather than a screen.
  *
- * The accent is written onto the enclosing exhibit rather than onto the
- * document, so the colour belongs to the run that produced it. Flooding the
- * whole page would say the *site* had reached a conclusion, which it has not --
- * it is showing you one somebody else got.
+ * This was a centred, full-height block: 256px of padding around a stack of
+ * five centred elements, roughly 770px to deliver one sentence and its
+ * consequence. Centring is what forced the height -- a centred column cannot
+ * use the width beside it, so every part has to queue vertically.
  *
- * Everything inside the frame is grey until this point, so the shift still
- * reads as an event, just a correctly scoped one.
+ * Read across instead, the same content is two halves of one line: the ruling
+ * on the left, where to aim on the right. It reads better that way too, because
+ * those two things are a pair rather than a sequence.
+ *
+ * The accent is still written onto the enclosing exhibit rather than the
+ * document, so the colour belongs to the run that produced it.
  */
 export function VerdictReveal() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { margin: "-30% 0px -30% 0px" });
+  const inView = useInView(ref, { margin: "-20% 0px -20% 0px" });
 
   const verdict = DOG_VALIDATION.verdict;
   const style = VERDICT_STYLE[verdict];
+  const redirect = DOG_VALIDATION.redirect;
 
   useEffect(() => {
     const frame = ref.current?.closest<HTMLElement>("[data-exhibit]");
@@ -43,39 +48,49 @@ export function VerdictReveal() {
   return (
     <div
       ref={ref}
-      className="flex flex-col items-center px-6 py-24 text-center lg:px-10 lg:py-32"
+      className="grid gap-x-12 gap-y-8 px-6 py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:px-10 lg:py-14"
     >
-      <p className="text-caption text-[var(--color-ink-faint)]">{RULE_NAME[DOG_VALIDATION.firedRule]}</p>
+      <div>
+        <p className="text-[11px] text-[var(--color-ink-faint)]">
+          {RULE_NAME[DOG_VALIDATION.firedRule]}
+        </p>
 
-      <h3
-        className="text-display-2 mt-8 text-balance transition-colors duration-700"
-        style={{ color: inView ? "var(--accent)" : "var(--color-ink-faint)" }}
-      >
-        {style.label}
-      </h3>
+        <h3
+          className="mt-3 text-[clamp(2rem,4vw,3.25rem)] leading-[1.02] font-medium tracking-[-0.03em] text-balance transition-colors duration-700"
+          style={{ color: inView ? "var(--accent)" : "var(--color-ink-faint)" }}
+        >
+          {style.label}
+        </h3>
 
-      <p className="mt-8 max-w-[44ch] text-body-lg text-balance text-[var(--color-ink-soft)]">
-        {style.gloss}
-      </p>
+        <p className="mt-4 max-w-[44ch] text-[15px] leading-relaxed text-pretty text-[var(--color-ink-soft)]">
+          {style.gloss}
+        </p>
 
-      {DOG_VALIDATION.redirect ? (
-        <div className="mt-14 flex max-w-[34ch] flex-col items-center gap-4">
-          <span className="rounded-full border border-[var(--color-rule)] px-3 py-1 text-caption text-[var(--color-ink-soft)]">
-            Where the opening is · {STRENGTH_LABEL[DOG_VALIDATION.redirect.strength].label}
-          </span>
-          <p className="text-headline text-balance">{DOG_VALIDATION.redirect.theme}</p>
-          <p className="text-caption text-[var(--color-ink-soft)]">
-            {DOG_VALIDATION.redirect.evidenceIds.length} people said so, across two products.
-          </p>
-        </div>
-      ) : null}
-
-      <div className="mt-14 flex flex-col items-center gap-3">
-        <div className="rule-fade w-40" />
-        <p className="text-caption text-[var(--color-ink-faint)]">
+        <p className="mt-6 text-[11px] text-[var(--color-ink-faint)]">
           Reached by the same rules every time. No AI decided this.
         </p>
       </div>
+
+      {redirect ? (
+        <div className="paper self-start p-5">
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <p className="text-[11px] text-[var(--color-ink-faint)]">Where the opening is</p>
+            <span className="rounded-full border border-[var(--color-rule)] px-2 py-0.5 text-[10.5px] text-[var(--color-ink-soft)]">
+              {STRENGTH_LABEL[redirect.strength].label}
+            </span>
+          </div>
+
+          <p className="mt-3 text-[1.0625rem] leading-snug font-medium text-balance">
+            {redirect.theme}
+          </p>
+          <p className="mt-3 text-[12.5px] leading-relaxed text-pretty text-[var(--color-ink-soft)]">
+            {redirect.basis}
+          </p>
+          <p className="mt-2 font-mono text-[10.5px] text-[var(--color-ink-faint)]">
+            {redirect.evidenceIds.join("  ")}
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

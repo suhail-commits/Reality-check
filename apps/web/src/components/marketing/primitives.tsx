@@ -129,17 +129,39 @@ export function MagneticButton({
  * citation id and the outbound link are the product's whole promise made
  * visible -- you can go and check.
  */
-export function EvidenceCard({ evidence, index }: { evidence: Evidence; index: number }) {
+export function EvidenceCard({
+  evidence,
+  index,
+  dense = false,
+}: {
+  evidence: Evidence;
+  index: number;
+  /**
+   * Tighter padding and a smaller quote, for places where several cards stack
+   * in a column and their combined height sets the height of the section
+   * around them. Nothing is hidden or truncated -- the same quote, the same
+   * source, the same link, in less room.
+   */
+  dense?: boolean;
+}) {
   const tone =
     evidence.kind === "praise" ? "text-[var(--color-build)]" : "text-[var(--color-dont)]";
 
   return (
-    <Reveal delay={index * 0.08}>
-      <div className="paper p-6 hover:paper-lift">
-        <p className="font-mono text-[0.9375rem] leading-relaxed text-[var(--color-ink)]">
+    <Reveal delay={index * (dense ? 0.05 : 0.08)}>
+      <div className={`paper hover:paper-lift ${dense ? "p-3.5" : "p-6"}`}>
+        <p
+          className={`font-mono text-[var(--color-ink)] ${
+            dense ? "text-[12.5px] leading-[1.55]" : "text-[0.9375rem] leading-relaxed"
+          }`}
+        >
           &ldquo;{evidence.quote}&rdquo;
         </p>
-        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-[var(--color-ink-faint)]">
+        <div
+          className={`flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[var(--color-ink-faint)] ${
+            dense ? "mt-2 text-[10.5px]" : "mt-4 text-caption"
+          }`}
+        >
           <span className={tone}>{evidence.kind === "praise" ? "praise" : "complaint"}</span>
           <span>{SOURCE_LABEL[evidence.source] ?? evidence.source}</span>
           <span>{formatDate(evidence.postedAt)}</span>

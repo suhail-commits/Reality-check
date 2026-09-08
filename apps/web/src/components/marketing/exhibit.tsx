@@ -17,17 +17,22 @@ import { formatDate } from "@/lib/verdict";
  * than on the document, so the colour change when the verdict lands belongs to
  * the example that produced it instead of flooding a page that has not decided
  * anything.
+ *
+ * Everything inside is laid out across rather than down. The section used to run
+ * past four screens, almost all of it padding and centred columns that could not
+ * use the width beside them; it is the same content in roughly a third of the
+ * height.
  */
 export function Exhibit({ children }: { children: React.ReactNode }) {
   const { ideaText, ideaSpec, createdAt } = DOG_VALIDATION;
 
   return (
-    <section id="example" className="mx-auto w-full max-w-[76rem] px-6 py-24 lg:px-10 lg:py-32">
+    <section id="example" className="mx-auto w-full max-w-[76rem] px-6 py-16 lg:px-10 lg:py-20">
       <div
         data-exhibit
         className="overflow-hidden rounded-[18px] border border-[var(--color-rule)] bg-[var(--color-paper-warm)] shadow-[0_1px_2px_rgba(17,17,17,0.03),0_28px_64px_-40px_rgba(17,17,17,0.16)]"
       >
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[var(--color-rule)] px-6 py-4 lg:px-10">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-[var(--color-rule)] px-6 py-3 lg:px-10">
           <span className="text-caption font-medium text-[var(--color-ink)]">
             One run, start to finish
           </span>
@@ -39,15 +44,20 @@ export function Exhibit({ children }: { children: React.ReactNode }) {
           </span>
         </div>
 
-        <div className="border-b border-[var(--color-rule)] px-6 py-10 lg:px-10 lg:py-14">
-          <p className="text-caption text-[var(--color-ink-faint)]">What they typed in</p>
-          <p className="text-headline mt-4 max-w-[26ch] text-balance">
-            &ldquo;{ideaText}&rdquo;
-          </p>
-          {ideaSpec.statedWedge ? (
-            <p className="mt-5 max-w-[46ch] text-body-lg text-[var(--color-ink-soft)]">
-              Their angle: {ideaSpec.statedWedge}.
+        <div className="grid gap-x-12 gap-y-5 border-b border-[var(--color-rule)] px-6 py-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:px-10 lg:py-8">
+          <div>
+            <p className="text-[11px] text-[var(--color-ink-faint)]">What they typed in</p>
+            <p className="mt-2 text-[clamp(1.375rem,2.2vw,1.875rem)] leading-tight tracking-[-0.02em] text-balance">
+              &ldquo;{ideaText}&rdquo;
             </p>
+          </div>
+          {ideaSpec.statedWedge ? (
+            <div className="lg:self-end">
+              <p className="text-[11px] text-[var(--color-ink-faint)]">Their angle</p>
+              <p className="mt-2 max-w-[46ch] text-[15px] leading-relaxed text-[var(--color-ink-soft)]">
+                {ideaSpec.statedWedge}.
+              </p>
+            </div>
           ) : null}
         </div>
 
