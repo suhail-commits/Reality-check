@@ -63,21 +63,49 @@ export function SignalRail() {
 
       gsap.registerPlugin(ScrollTrigger);
 
-      ctx = gsap.context(() => {
-        const distance = (track.current as HTMLDivElement).scrollWidth - window.innerWidth + 96;
+      /**
+       * The rail travels from its left gutter to its right gutter, passing
+       * through centre exactly at the midpoint of the scroll.
+       *
+       * The old distance was `scrollWidth - innerWidth + 96`, measured from the
+       * viewport edge. Once the viewport passes the rail's own width -- 1904px,
+       * which a 1080p screen reaches at 90% browser zoom -- that goes negative,
+       * so the track was shoved off centre and the pin was handed a negative
+       * length. Naming the two ends as gutters instead makes the direction fall
+       * out of the arithmetic rather than being assumed: when the cards
+       * overflow, `travel` is negative and the rail scrolls left to reveal them;
+       * when they fit it is positive and the group drifts left to right.
+       */
+      const mm = gsap.matchMedia(section.current as HTMLElement);
+      ctx = mm;
 
-        gsap.to(track.current, {
-          x: -distance,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section.current,
-            start: "top top",
-            end: () => `+=${distance}`,
-            pin: true,
-            scrub: 1,
-            invalidateOnRefresh: true,
+      mm.add("(min-width: 1024px)", () => {
+        const el = track.current as HTMLDivElement;
+
+        // Layout geometry, so these stay right once the track is transformed.
+        const startX = () => -el.offsetLeft;
+        const endX = () => window.innerWidth - el.offsetLeft - el.offsetWidth;
+        const travel = () => Math.abs(window.innerWidth - el.offsetWidth);
+
+        // Nothing to move through: skip rather than pin for zero distance.
+        if (travel() < 8) return;
+
+        gsap.fromTo(
+          el,
+          { x: startX },
+          {
+            x: endX,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section.current,
+              start: "top top",
+              end: () => `+=${travel()}`,
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
           },
-        });
+        );
 
         gsap.to(".signal-card", {
           rotate: 2,
@@ -85,11 +113,12 @@ export function SignalRail() {
           scrollTrigger: {
             trigger: section.current,
             start: "top top",
-            end: () => `+=${distance}`,
+            end: () => `+=${travel()}`,
             scrub: 1,
+            invalidateOnRefresh: true,
           },
         });
-      }, section);
+      });
     })();
 
     return () => {
@@ -113,19 +142,19 @@ export function SignalRail() {
 
       <div
         ref={track}
-        className="flex flex-col gap-6 px-6 lg:w-max lg:flex-row lg:gap-8 lg:px-10 lg:pb-32"
+        className="flex flex-col gap-6 px-6 lg:mx-auto lg:w-max lg:flex-row lg:gap-8 lg:px-10 lg:pb-32"
       >
         {SIGNALS.map((signal, i) => (
           <article
             key={signal.question}
             style={{ transform: `rotate(${(i % 2 === 0 ? -1 : 1) * (0.5 + (i % 3) * 0.35)}deg)` }}
-            className="signal-card paper flex flex-col p-9 hover:paper-lift lg:h-[23rem] lg:w-[27rem]"
+            className="signal-card paper flex flex-col p-9 hover:paper-lift lg:h-[26rem] lg:w-[29rem]"
           >
             <p className="text-body-lg text-balance">{signal.question}</p>
             <p className="mt-auto pt-10 text-display-2 tabular-nums text-[var(--color-sage)]">
               {signal.value}
             </p>
-            <p className="mt-4 text-caption text-[var(--color-ink-soft)]">{signal.detail}</p>
+            <p className="mt-5 text-support text-[var(--color-ink-soft)]">{signal.detail}</p>
           </article>
         ))}
       </div>
