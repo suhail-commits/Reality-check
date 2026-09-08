@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { DURATION, EASE, usePrefersReducedMotion } from "@/lib/motion";
-import { Brain } from "./brain";
 import { MagneticButton } from "./primitives";
 
 /**
@@ -13,13 +12,15 @@ import { MagneticButton } from "./primitives";
  * this and why should I care" before it shows anything else; a demonstration is
  * evidence for a claim, and it cannot stand in for making the claim.
  *
- * Four levels, in this order: headline, call to action, brain, particles. The
- * brain is third deliberately. It sits in its own column at low contrast and
- * barely moves, so it is read after the words rather than instead of them --
- * and the particle field behind the whole page stays the motion layer.
+ * There is no illustration. A brain drawn here twice over -- first as nodes and
+ * edges, then as line art -- was in both cases a picture of the idea rather
+ * than the idea, and a reader recognises "brain = thinking" instantly and then
+ * has nothing left to find.
  *
- * The split is the point: **the particles provide motion, the brain provides
- * meaning.** Two things moving in one viewport compete, and the louder one wins.
+ * The work moved into the particle field instead, which occasionally gathers
+ * into loose clusters and briefly links them. Nothing announces it and nothing
+ * labels it, so it is noticed on the second or third visit rather than the
+ * first. That is the intended order.
  */
 export function Hero() {
   const reduced = usePrefersReducedMotion();
@@ -37,18 +38,6 @@ export function Hero() {
       id="top"
       className="relative flex min-h-[94svh] flex-col justify-center overflow-hidden pt-36 pb-28"
     >
-      {/*
-       * Level 3. Its own column so it never sits under the type, held at 60%
-       * opacity so it stays quieter than the call to action, and pinned to the
-       * page's own grid rather than floating in a box of its own.
-       */}
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] items-center justify-center pr-6 opacity-60 lg:flex lg:pr-10"
-        aria-hidden
-      >
-        <Brain className="w-full max-w-[26rem]" />
-      </div>
-
       <div className="relative mx-auto w-full max-w-[76rem] px-6 lg:px-10">
         <motion.p {...rise(0)} className="text-marker">
           Idea Reality Check

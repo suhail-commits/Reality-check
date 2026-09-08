@@ -26,6 +26,13 @@ import { usePrefersReducedMotion } from "@/lib/motion";
  * else. So the count is high enough that a useful number survive the gaps, and
  * the alpha floor is above the visible threshold rather than at it: 0.4 gives a
  * luminance gap of about 53 against ivory, where 0.2 gave 27 and read as blank.
+ *
+ * Clustering is on. A third of the particles drift toward three slow-moving
+ * points, and the ones that end up near each other get a faint line for as long
+ * as that lasts. Full cycles take two to three minutes, so nothing about it is
+ * apparent on arrival -- which is the point. It replaced two attempts at a brain
+ * illustration, both of which said "thinking" so loudly and so immediately that
+ * there was nothing left to notice.
  */
 export function ParticleField() {
   const reduced = usePrefersReducedMotion();
@@ -41,6 +48,11 @@ export function ParticleField() {
       color="#5D7A63"
       alphaRange={[0.4, 0.85]}
       vy={-0.012}
+      cluster
+      clusterCount={3}
+      clusterRadius={130}
+      linkDistance={86}
+      linkAlpha={0.15}
     />
   );
 }
