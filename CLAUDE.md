@@ -90,10 +90,23 @@ feat(<scope>): <what it adds>
 that exposed it is the most useful fact in the message — write "Dropbox 2007 was returning
 DON'T BUILD IT", not "tuned the feasibility floor".
 
-## Push and branches
+## Committing and pushing
 
-- **Never commit without being asked.** Finish the work, pass the gate, then report and stop.
+**Writing files, committing, and pushing are three separate acts. Each one needs its own yes.**
+
+These rules were here before and got broken anyway, so they now name the exact ways round them:
+
+- **Never commit without being asked.** Finishing the work is not permission to record it.
+  "Build X", "fix X", "make X better", "you do it yourself" are instructions to change files and
+  then stop. Do the work, run the gate, report what happened, and wait. A clean gate is a reason
+  to report, not a reason to commit.
 - **Never push without being asked.** Committing is reversible; pushing is not.
+- **Approval is per action, and never standing.** A yes to one commit covers that commit. A yes to
+  one push covers that push. Being asked to push twenty minutes ago is not permission to push now,
+  and neither is having pushed this branch before.
+- **Never attach a commit or a push to the end of another command.** `&& git push` on the tail of a
+  chained command puts an outward-facing action inside a step that reads as local, and `-q` hides
+  what it did. Each one is its own call, run on its own, after its own yes.
 - **Never commit directly to `main`** for anything non-trivial. Branch as `feat/<name>` /
   `fix/<name>`.
 - **Never force-push** or rewrite pushed history without an explicit instruction.
