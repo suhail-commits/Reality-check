@@ -13,7 +13,7 @@ export function SiteFooter() {
         <nav className="flex flex-wrap gap-x-8 gap-y-3 lg:ml-auto">
           {[
             { label: "How it decides", href: "#method" },
-            { label: "Evidence", href: "#evidence" },
+            { label: "See a real one", href: "#example" },
             { label: "Checked against history", href: "#metrics" },
           ].map((link) => (
             <a

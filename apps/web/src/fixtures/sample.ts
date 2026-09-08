@@ -64,7 +64,7 @@ const dogEvidence: Evidence[] = [
     kind: "complaint",
     source: "reddit",
     competitorId: "rover",
-    theme: "walker vetting is shallow",
+    theme: "you cannot tell if the dog walker is any good",
     quote:
       "The background check is a joke. My walker had never handled a reactive dog and nothing in the profile said so.",
     url: "https://example.com/sample/r-dogs-1",
@@ -77,7 +77,7 @@ const dogEvidence: Evidence[] = [
     kind: "complaint",
     source: "reddit",
     competitorId: "wag",
-    theme: "walker vetting is shallow",
+    theme: "you cannot tell if the dog walker is any good",
     quote:
       "Third walker in a month who clearly had not read that my dog cannot be off leash. There is no real screening.",
     url: "https://example.com/sample/r-dogs-2",
@@ -90,7 +90,7 @@ const dogEvidence: Evidence[] = [
     kind: "complaint",
     source: "appstore",
     competitorId: "wag",
-    theme: "walker vetting is shallow",
+    theme: "you cannot tell if the dog walker is any good",
     quote: "Two stars. You have no idea who is actually turning up at your door.",
     url: "https://example.com/sample/appstore-wag-1",
     postedAt: ago(22),
@@ -101,7 +101,7 @@ const dogEvidence: Evidence[] = [
     kind: "complaint",
     source: "hn",
     competitorId: "rover",
-    theme: "commission is punishing for walkers",
+    theme: "the app takes too big a cut from dog walkers",
     quote:
       "Twenty percent off the top means the good walkers leave for private clients within about six months.",
     url: "https://example.com/sample/hn-1",
@@ -113,7 +113,7 @@ const dogEvidence: Evidence[] = [
     kind: "complaint",
     source: "reddit",
     competitorId: "wag",
-    theme: "commission is punishing for walkers",
+    theme: "the app takes too big a cut from dog walkers",
     quote: "After the cut and the insurance deduction I clear less than minimum wage per walk.",
     url: "https://example.com/sample/r-walkers-1",
     postedAt: ago(35),
@@ -124,7 +124,7 @@ const dogEvidence: Evidence[] = [
     kind: "complaint",
     source: "appstore",
     competitorId: "rover",
-    theme: "support is unreachable when something goes wrong",
+    theme: "nobody answers when something goes wrong",
     quote: "My dog was injured on a walk and it took nine days to reach a human being.",
     url: "https://example.com/sample/appstore-rover-1",
     postedAt: ago(15),
@@ -216,17 +216,17 @@ export const DOG_DOSSIER: Dossier = {
   ],
   complaintClusters: [
     {
-      theme: "walker vetting is shallow",
+      theme: "you cannot tell if the dog walker is any good",
       evidenceIds: ["ev_004", "ev_005", "ev_006"],
       competitorIds: ["rover", "wag"],
     },
     {
-      theme: "commission is punishing for walkers",
+      theme: "the app takes too big a cut from dog walkers",
       evidenceIds: ["ev_007", "ev_008"],
       competitorIds: ["rover", "wag"],
     },
     {
-      theme: "support is unreachable when something goes wrong",
+      theme: "nobody answers when something goes wrong",
       evidenceIds: ["ev_009"],
       competitorIds: ["rover"],
     },
@@ -271,7 +271,7 @@ export const DOG_VALIDATION: Validation = {
     wedgeMatchesTopCluster: false,
   },
   firedRule: 6,
-  wedge: "Vet the walkers, not the interface.",
+  wedge: "Fix who shows up at the door, not the booking screen.",
   prose:
     "Owners are not short of dog-walking apps and they are not asking for a nicer one. What they complain about, across both Rover and Wag, is that they cannot tell who is turning up at their door [ev_004] [ev_005] [ev_006]. Walkers complain about the other end of the same trade: a twenty percent cut that pushes the competent ones into private arrangements within months [ev_007] [ev_008]. Your stated angle is scheduling and a cleaner interface, and nobody in this evidence is unhappy about either -- booking is one of the few things people actively praise [ev_010] [ev_011]. The market is growing rather than shrinking, and nothing here died for lack of demand, so this is a real opening entered from the wrong side. Build the vetting, not the app.",
   citedEvidenceIds: ["ev_004", "ev_005", "ev_006", "ev_007", "ev_008", "ev_010", "ev_011"],

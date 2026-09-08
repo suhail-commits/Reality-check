@@ -99,11 +99,15 @@ export function SignalRail() {
   }, [reduced]);
 
   return (
-    <section ref={section} className="relative overflow-hidden py-24 lg:py-0">
+    <section id="method" ref={section} className="relative overflow-hidden py-24 lg:py-0">
       <div className="mx-auto max-w-[76rem] px-6 lg:px-10">
-        <h2 className="text-headline mb-12 max-w-[20ch] text-balance lg:pt-32">
+        <h2 className="text-headline mb-6 max-w-[20ch] text-balance lg:pt-32">
           Four questions, asked the same way every time.
         </h2>
+        <p className="mb-12 max-w-[58ch] text-body-lg text-[var(--color-ink-soft)]">
+          The answers come from what people have written in public. The decision that follows is
+          arithmetic, so the same evidence always produces the same result.
+        </p>
       </div>
 
       <div
@@ -116,7 +120,7 @@ export function SignalRail() {
             className="signal-card glass flex flex-col p-8 lg:h-[22rem] lg:w-[26rem]"
           >
             <p className="text-body-lg text-balance">{signal.question}</p>
-            <p className="mt-auto pt-10 text-display-2 tabular-nums text-[var(--accent)] transition-colors duration-700">
+            <p className="mt-auto pt-10 text-display-2 tabular-nums">
               {signal.value}
             </p>
             <p className="mt-4 text-caption text-[var(--color-ink-soft)]">{signal.detail}</p>

@@ -1,79 +1,67 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { DURATION, EASE, usePrefersReducedMotion } from "@/lib/motion";
-
-const IDEA = "an app for dog walkers";
-const CHAR_MS = 55;
+import { MagneticButton } from "./primitives";
 
 /**
- * The one page-load moment.
+ * The hero is about the product, and only about the product.
  *
- * An idea gets typed into the page, then held. Nothing else on this site
- * autoplays; scattering entrance animations across every section is the tell of
- * a page assembled from parts rather than composed.
+ * An earlier version opened with an example idea set at 140px, which read as
+ * though the example *was* the company. A landing page has to answer "what is
+ * this and why should I care" before it shows anything else; a demonstration is
+ * evidence for a claim, and it cannot stand in for making the claim.
  *
- * There is deliberately no accent colour anywhere above the fold. The tool has
- * not decided yet, so the page is grey -- which is what makes the flood of
- * colour at the verdict land as an event rather than as decoration.
+ * The headline is the position, not a description. Every competitor in this
+ * category is built to encourage you, so the one thing none of them can say is
+ * the one thing worth putting first.
  */
 export function Hero() {
   const reduced = usePrefersReducedMotion();
-  const [typed, setTyped] = useState(reduced ? IDEA.length : 0);
-
-  useEffect(() => {
-    if (reduced) {
-      setTyped(IDEA.length);
-      return;
-    }
-
-    let index = 0;
-    const timer = setInterval(() => {
-      index += 1;
-      setTyped(index);
-      if (index >= IDEA.length) clearInterval(timer);
-    }, CHAR_MS);
-
-    return () => clearInterval(timer);
-  }, [reduced]);
-
-  const done = typed >= IDEA.length;
+  const rise = (delay: number) =>
+    reduced
+      ? {}
+      : {
+          initial: { opacity: 0, y: 18, filter: "blur(8px)" },
+          animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+          transition: { duration: DURATION.reveal, ease: EASE.outExpo, delay },
+        };
 
   return (
-    <section id="top" className="relative flex min-h-[100svh] flex-col justify-center pt-32 pb-20">
+    <section
+      id="top"
+      className="relative flex min-h-[92svh] flex-col justify-center pt-32 pb-24"
+    >
       <div className="mx-auto w-full max-w-[76rem] px-6 lg:px-10">
+        <motion.h1 {...rise(0)} className="text-display-1 max-w-[14ch] text-balance">
+          It will tell you not to build it.
+        </motion.h1>
+
         <motion.p
-          initial={reduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: DURATION.slow, ease: EASE.outExpo }}
-          className="mb-10 max-w-[42ch] text-body-lg text-[var(--color-ink-soft)]"
+          {...rise(0.12)}
+          className="mt-10 max-w-[54ch] text-body-lg text-[var(--color-ink-soft)]"
         >
-          Every other idea validator scores you out of ten and tells you what you hoped to hear.
-          This one reads what people actually wrote.
+          Reality Check reads what people have actually written about your market, links every
+          claim back to the page it came from, and reaches its answer with ordinary code instead of
+          an AI&rsquo;s opinion.
         </motion.p>
 
-        <p className="text-display-1">
-          <span className="text-[var(--color-ink-faint)]">&ldquo;</span>
-          {IDEA.slice(0, typed)}
-          <span
-            className={`inline-block w-[0.5ch] translate-y-[-0.08em] bg-[var(--color-ink-faint)] ${
-              done ? "animate-caret" : ""
-            }`}
-            style={{ height: "0.78em" }}
-            aria-hidden
-          />
-          {done ? <span className="text-[var(--color-ink-faint)]">&rdquo;</span> : null}
-        </p>
+        <motion.div {...rise(0.24)} className="mt-12 flex flex-wrap items-center gap-6">
+          <MagneticButton href="#try">Check an idea</MagneticButton>
+          <span className="text-caption text-[var(--color-ink-faint)]">
+            No account. No email. Nothing saved unless you share it.
+          </span>
+        </motion.div>
 
         <motion.div
-          initial={reduced ? false : { opacity: 0, y: 12 }}
-          animate={done ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: DURATION.slow, ease: EASE.outExpo, delay: 0.3 }}
-          className="mt-16 flex items-center gap-3 text-caption text-[var(--color-ink-faint)]"
+          {...rise(0.36)}
+          className="mt-24 flex flex-wrap items-center gap-x-8 gap-y-3 text-caption text-[var(--color-ink-faint)]"
         >
-          <span className="h-8 w-px bg-gradient-to-b from-transparent to-[var(--color-rule)]" />
-          Scroll to watch it decide
+          <span>Four questions, asked the same way every time</span>
+          <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
+          <span>Every claim links to its source</span>
+          <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
+          <span>Checked against markets whose outcome we already know</span>
         </motion.div>
       </div>
     </section>

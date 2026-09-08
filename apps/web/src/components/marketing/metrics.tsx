@@ -51,7 +51,7 @@ export function Metrics() {
               <p
                 className={`tabular-nums ${
                   metric.lead
-                    ? "text-display-1 text-[var(--accent)] transition-colors duration-700"
+                    ? "text-display-1"
                     : "text-display-2"
                 }`}
               >

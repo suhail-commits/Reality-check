@@ -64,7 +64,7 @@ function useScrubProgress(ref: React.RefObject<HTMLElement | null>, disabled: bo
 
 function ActHeading({ children, aside }: { children: React.ReactNode; aside?: React.ReactNode }) {
   return (
-    <div className="lg:sticky lg:top-32 lg:self-start">
+    <div className="lg:sticky lg:top-28 lg:self-start">
       <h2 className="text-headline text-balance">{children}</h2>
       {aside ? <div className="mt-8">{aside}</div> : null}
     </div>
@@ -73,8 +73,11 @@ function ActHeading({ children, aside }: { children: React.ReactNode; aside?: Re
 
 function Act({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
-    <section id={id} className="mx-auto w-full max-w-[76rem] px-6 py-24 lg:px-10 lg:py-32">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-20">
+    <section
+      id={id}
+      className="border-b border-[var(--color-rule)] px-6 py-20 lg:px-10 lg:py-24"
+    >
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
         {children}
       </div>
     </section>
@@ -84,7 +87,7 @@ function Act({ children, id }: { children: React.ReactNode; id?: string }) {
 /** Act one: the market is not empty, and that is the first thing worth knowing. */
 function WhoBuiltThis() {
   return (
-    <Act id="method">
+    <Act>
       <ActHeading>Who already built this?</ActHeading>
 
       <div className="space-y-px">
@@ -169,12 +172,14 @@ function YourAngle() {
 
   return (
     <Act>
-      <ActHeading>Your angle was scheduling.</ActHeading>
+      <ActHeading>Their plan was a nicer app.</ActHeading>
 
       <div className="space-y-10">
         <Reveal>
           <div className="glass p-6">
-            <p className="text-caption text-[var(--color-ink-faint)]">What you said you would fix</p>
+            <p className="text-caption text-[var(--color-ink-faint)]">
+              What they said they would fix
+            </p>
             <p className="mt-3 text-headline text-[var(--color-ink-faint)] line-through decoration-[var(--color-dont)] decoration-2">
               {wedge}
             </p>

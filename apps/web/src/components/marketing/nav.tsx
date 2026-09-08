@@ -5,7 +5,7 @@ import { MagneticButton } from "./primitives";
 
 const LINKS = [
   { label: "How it decides", href: "#method" },
-  { label: "Evidence", href: "#evidence" },
+  { label: "See a real one", href: "#example" },
   { label: "Checked against history", href: "#metrics" },
 ];
 
