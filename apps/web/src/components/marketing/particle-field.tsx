@@ -50,9 +50,9 @@ export function ParticleField() {
       vy={-0.012}
       cluster
       clusterCount={3}
-      clusterRadius={130}
-      linkDistance={86}
-      linkAlpha={0.15}
+      clusterRadius={110}
+      linkDistance={72}
+      linkAlpha={0.45}
     />
   );
 }

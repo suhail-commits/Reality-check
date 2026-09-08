@@ -127,9 +127,9 @@ export const Particles: React.FC<ParticlesProps> = ({
   alphaRange = [0.1, 0.7],
   cluster = false,
   clusterCount = 3,
-  clusterRadius = 120,
-  linkDistance = 88,
-  linkAlpha = 0.16,
+  clusterRadius = 110,
+  linkDistance = 72,
+  linkAlpha = 0.45,
   ...props
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -181,10 +181,15 @@ export const Particles: React.FC<ParticlesProps> = ({
     dx: (Math.random() - 0.5) * 0.1,
     dy: (Math.random() - 0.5) * 0.1,
     magnetism: 0.1 + Math.random() * 4,
-    // A third. Enough that groups form, few enough that most of the field
-    // carries on drifting and the gathering reads as something happening
-    // rather than as the layout.
-    social: Math.random() < 0.34,
+    /*
+     * A tenth. This was a third, which simulated to 1,200 lines on screen --
+     * three tight groups where nearly every pair falls inside the link
+     * distance, which is exactly the constellation background this was meant
+     * not to be. It only looked acceptable because the lines were too faint to
+     * see. At a tenth it settles around 18 links, which reads as a few things
+     * connecting.
+     */
+    social: Math.random() < 0.1,
   });
 
   const rgb = hexToRgb(color);
@@ -226,8 +231,10 @@ export const Particles: React.FC<ParticlesProps> = ({
   };
 
   const initCanvas = () => {
+    // Only resizeCanvas. The published version calls drawParticles() as well,
+    // and both push `quantity` circles -- so `quantity={160}` silently ran 320,
+    // doubling the per-frame cost and every density calculation made from it.
     resizeCanvas();
-    drawParticles();
   };
 
   const onMouseMove = () => {
@@ -276,7 +283,7 @@ export const Particles: React.FC<ParticlesProps> = ({
    */
   const drawLinks = (social: Circle[]) => {
     if (!context.current) return;
-    context.current.lineWidth = 0.6;
+    context.current.lineWidth = 0.9;
 
     for (let i = 0; i < social.length; i++) {
       const a = social[i] as Circle;
