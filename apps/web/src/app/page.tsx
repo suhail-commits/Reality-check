@@ -1,40 +1,39 @@
-import Link from "next/link";
-import { Validator } from "@/components/validator";
-import { SHORTENER_VALIDATION } from "@/fixtures/sample";
+import { CallToAction } from "@/components/marketing/cta";
+import { SiteFooter } from "@/components/marketing/footer";
+import { Hero } from "@/components/marketing/hero";
+import { Metrics } from "@/components/marketing/metrics";
+import { Narrative } from "@/components/marketing/narrative";
+import { Nav } from "@/components/marketing/nav";
+import { SignalRail } from "@/components/marketing/signal-rail";
+import { Sources } from "@/components/marketing/sources";
+import { VerdictReveal } from "@/components/marketing/verdict";
 
+/**
+ * The homepage performs one complete verdict, then hands you the input box.
+ *
+ * The order is the argument. Competitors first, because a crowded market is the
+ * thing most people wrongly read as a no. Then what those competitors' users
+ * actually say. Then the gap between that and the idea you brought. Only then a
+ * verdict -- and the page stays grey until it arrives, because the tool has not
+ * decided yet and neither has the page.
+ *
+ * Nothing here claims anything it cannot cite. There is no customer logo wall,
+ * because there are no customers.
+ */
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col gap-12">
-      <header className="space-y-4">
-        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-          Does your idea already exist, and does anyone want it?
-        </h1>
-        <p className="max-w-xl text-[17px] text-pretty text-[var(--color-ink-soft)]">
-          Most idea validators score you out of ten and tell you what you hoped to hear. This one
-          reads what people actually wrote, links every claim to its source, and will tell you not
-          to build it.
-        </p>
-      </header>
-
-      <Validator />
-
-      <footer className="mt-auto space-y-3 border-t border-[var(--color-rule)] pt-6 text-sm text-[var(--color-ink-faint)]">
-        <p>
-          The verdict is decided by a deterministic rubric, not by a language model. The model only
-          reads sources and writes the explanation. Any sentence it writes that cannot be traced to
-          a quote is dropped before you see it.
-        </p>
-        <p>
-          Here is one it says no to:{" "}
-          <Link
-            href={`/v/${SHORTENER_VALIDATION.id}`}
-            className="underline decoration-dotted underline-offset-4 transition hover:text-[var(--color-ink)]"
-          >
-            a link shortener with a nicer dashboard
-          </Link>
-          .
-        </p>
-      </footer>
-    </main>
+    <>
+      <Nav />
+      <main>
+        <Hero />
+        <Narrative />
+        <VerdictReveal />
+        <SignalRail />
+        <Metrics />
+        <Sources />
+        <CallToAction />
+      </main>
+      <SiteFooter />
+    </>
   );
 }

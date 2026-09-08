@@ -10,13 +10,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@rc/engine": "workspace:*",
     "@rc/rubric": "workspace:*",
     "@rc/shared": "workspace:*",
+    "@rc/sources": "workspace:*",
+    "framer-motion": "^13.2.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
     "next": "^15.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "@rc/engine": "workspace:*",
-    "@rc/sources": "workspace:*"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",

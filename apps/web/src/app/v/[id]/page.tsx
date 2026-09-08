@@ -64,7 +64,7 @@ export default async function SharedVerdict({ params }: { params: Promise<{ id: 
   if (!found) notFound();
 
   return (
-    <main className="flex flex-1 flex-col gap-10">
+    <main className="mx-auto flex min-h-dvh max-w-3xl flex-1 flex-col gap-10 px-5 py-10 sm:px-8 sm:py-14">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link
