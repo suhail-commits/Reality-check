@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Particles } from "@/components/magic/particles";
 import { DURATION, EASE, usePrefersReducedMotion } from "@/lib/motion";
-import { Brain } from "./brain";
 import { MagneticButton } from "./primitives";
 
 /**
@@ -13,10 +13,13 @@ import { MagneticButton } from "./primitives";
  * this and why should I care" before it shows anything else; a demonstration is
  * evidence for a claim, and it cannot stand in for making the claim.
  *
- * The brain sits beside the words rather than behind them. Behind, it competes
- * with the headline for the same pixels and both lose; beside, it reads as the
- * subject of the sentence -- ideas start here, and by the bottom of the page
- * they have reached the globe.
+ * The illustration behind the words is Magic UI's particle field, and it
+ * replaced a hand-drawn brain. The brain was the honest reading of the brief --
+ * ideas start in a head -- but a brain built from nodes and edges is precisely
+ * the generic neural-network image the brief rules out, and every change that
+ * made it less generic made it less like a brain. A slow drift of particles
+ * says "thought, forming" without illustrating an organ, and it sits behind
+ * type instead of competing with it.
  */
 export function Hero() {
   const reduced = usePrefersReducedMotion();
@@ -32,53 +35,60 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[94svh] flex-col justify-center pt-36 pb-28"
+      className="relative flex min-h-[94svh] flex-col justify-center overflow-hidden pt-36 pb-28"
     >
-      <div className="mx-auto grid w-full max-w-[76rem] items-center gap-16 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20 lg:px-10">
-        <div>
-          <motion.p {...rise(0)} className="text-marker">
-            Idea Reality Check
-          </motion.p>
+      {/*
+       * Sparse and slow. `staticity` high so the field leans toward the cursor
+       * rather than chasing it, which is the difference between depth and a toy.
+       */}
+      {!reduced ? (
+        <Particles
+          className="absolute inset-0"
+          quantity={70}
+          staticity={70}
+          ease={70}
+          size={0.5}
+          color="#7E9B85"
+          vy={-0.012}
+        />
+      ) : null}
 
-          <motion.h1 {...rise(0.06)} className="text-display-1 mt-8 max-w-[15ch] text-balance">
-            Tell us your idea. We&rsquo;ll tell you where it works.
-          </motion.h1>
+      <div className="relative mx-auto w-full max-w-[76rem] px-6 lg:px-10">
+        <motion.p {...rise(0)} className="text-marker">
+          Idea Reality Check
+        </motion.p>
 
-          <motion.p
-            {...rise(0.16)}
-            className="mt-10 max-w-[54ch] text-body-lg text-[var(--color-ink-soft)]"
-          >
-            Reality Check reads what people have actually written about your market and finds the
-            gap nobody has closed. If your idea is aimed at it, we say so. If it isn&rsquo;t, we
-            show you what is &mdash; and every word links back to the page it came from.
-          </motion.p>
+        <motion.h1 {...rise(0.06)} className="text-display-1 mt-8 max-w-[15ch] text-balance">
+          Tell us your idea. We&rsquo;ll tell you where it works.
+        </motion.h1>
 
-          <motion.div {...rise(0.26)} className="mt-14 flex flex-wrap items-center gap-6">
-            <MagneticButton href="#try">Check an idea</MagneticButton>
-            <span className="text-caption text-[var(--color-ink-faint)]">
-              No account. No email. Nothing saved unless you share it.
-            </span>
-          </motion.div>
-        </div>
+        <motion.p
+          {...rise(0.16)}
+          className="mt-10 max-w-[54ch] text-body-lg text-[var(--color-ink-soft)]"
+        >
+          Reality Check reads what people have actually written about your market and finds the gap
+          nobody has closed. If your idea is aimed at it, we say so. If it isn&rsquo;t, we show you
+          what is &mdash; and every word links back to the page it came from.
+        </motion.p>
+
+        <motion.div {...rise(0.26)} className="mt-14 flex flex-wrap items-center gap-6">
+          <MagneticButton href="#try">Check an idea</MagneticButton>
+          <span className="text-caption text-[var(--color-ink-faint)]">
+            No account. No email. Nothing saved unless you share it.
+          </span>
+        </motion.div>
 
         <motion.div
-          {...rise(0.2)}
-          className="relative order-first aspect-square w-full lg:order-last"
+          {...rise(0.4)}
+          className="mt-28 flex flex-wrap items-center gap-x-10 gap-y-3 text-caption text-[var(--color-ink-faint)]"
         >
-          <Brain className="absolute inset-0" />
+          <span>Every answer ends somewhere you can go</span>
+          <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
+          <span>We say how sure we are, and why</span>
+          <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
+          <span>Checked against markets whose outcome we already know</span>
         </motion.div>
       </div>
-
-      <motion.div
-        {...rise(0.4)}
-        className="mx-auto mt-24 flex w-full max-w-[76rem] flex-wrap items-center gap-x-10 gap-y-3 px-6 text-caption text-[var(--color-ink-faint)] lg:px-10"
-      >
-        <span>Every answer ends somewhere you can go</span>
-        <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
-        <span>We say how sure we are, and why</span>
-        <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
-        <span>Checked against markets whose outcome we already know</span>
-      </motion.div>
     </section>
   );
 }

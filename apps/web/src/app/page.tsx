@@ -5,7 +5,7 @@ import { Hero } from "@/components/marketing/hero";
 import { Metrics } from "@/components/marketing/metrics";
 import { Narrative } from "@/components/marketing/narrative";
 import { Nav } from "@/components/marketing/nav";
-import { NeuralBackground } from "@/components/marketing/neural-bg";
+import { DotPattern } from "@/components/magic/dot-pattern";
 import { SignalRail } from "@/components/marketing/signal-rail";
 import { Sources } from "@/components/marketing/sources";
 import { IdeaTimeline } from "@/components/marketing/timeline";
@@ -33,12 +33,17 @@ export default function Home() {
         <Hero />
 
         {/*
-         * The quiet sections carry the network layer. It sits behind the sparse
-         * parts of the page, where there is room for depth, and stays out of the
-         * dense ones, where it would only add noise.
+         * The quiet sections carry the dot field. Generous spacing keeps the
+         * node count sane, and the radial mask fades it out at the edges so it
+         * never reads as a hard-edged texture swatch.
          */}
         <div className="relative">
-          <NeuralBackground />
+          <DotPattern
+            width={36}
+            height={36}
+            cr={1}
+            className="text-[var(--color-sage-light)] opacity-70 [mask-image:radial-gradient(60%_55%_at_50%_50%,black,transparent)]"
+          />
           <div className="relative">
             <SignalRail />
             <IdeaTimeline />
@@ -51,7 +56,12 @@ export default function Home() {
         </Exhibit>
 
         <div className="relative">
-          <NeuralBackground />
+          <DotPattern
+            width={36}
+            height={36}
+            cr={1}
+            className="text-[var(--color-sage-light)] opacity-70 [mask-image:radial-gradient(60%_55%_at_50%_50%,black,transparent)]"
+          />
           <div className="relative">
             <Metrics />
             <WorldImpact />

@@ -1,8 +1,8 @@
 "use client";
 
 import type { Evidence } from "@rc/shared";
-import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useRef } from "react";
 import { reveal, usePrefersReducedMotion } from "@/lib/motion";
 import { formatDate, SOURCE_LABEL } from "@/lib/verdict";
 
@@ -118,50 +118,6 @@ export function MagneticButton({
     <motion.button type="button" onClick={onClick} {...props}>
       {children}
     </motion.button>
-  );
-}
-
-/** Counts up once, the first time it is seen. */
-export function Counter({
-  to,
-  suffix = "",
-  duration = 1.6,
-}: {
-  to: number;
-  suffix?: string;
-  duration?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-20% 0px" });
-  const reduced = usePrefersReducedMotion();
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    if (reduced) {
-      setValue(to);
-      return;
-    }
-
-    const started = performance.now();
-    let frame = 0;
-
-    const tick = (now: number) => {
-      const t = Math.min((now - started) / (duration * 1000), 1);
-      // Ease-out cubic: fast to nearly-there, then settles.
-      setValue(Math.round(to * (1 - Math.pow(1 - t, 3))));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-
-    return () => cancelAnimationFrame(frame);
-  }, [inView, reduced, to, duration]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {value}
-      {suffix}
-    </span>
   );
 }
 

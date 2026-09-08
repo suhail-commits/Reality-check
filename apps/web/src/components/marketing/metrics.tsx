@@ -1,6 +1,7 @@
 "use client";
 
-import { Counter, Reveal } from "./primitives";
+import { NumberTicker } from "@/components/magic/number-ticker";
+import { Reveal } from "./primitives";
 
 /**
  * The metrics section, and the reason it opens with zero.
@@ -56,7 +57,8 @@ export function Metrics() {
                     : "text-display-2"
                 }`}
               >
-                <Counter to={metric.value} suffix={metric.suffix} />
+                <NumberTicker value={metric.value} />
+                {metric.suffix}
               </p>
               <p className="mt-4 max-w-[34ch] text-body-lg text-balance">{metric.label}</p>
               <p className="mt-3 max-w-[46ch] text-caption text-[var(--color-ink-soft)]">
