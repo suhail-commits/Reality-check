@@ -2,28 +2,24 @@
 
 import { motion } from "framer-motion";
 import { DURATION, EASE, usePrefersReducedMotion } from "@/lib/motion";
+import { Brain } from "./brain";
 import { MagneticButton } from "./primitives";
 
 /**
  * The hero is about the product, and only about the product.
- *
- * The particle field it used to own now lives in the root layout as one fixed
- * canvas for the whole app, so the hero is type and air. That is the editorial
- * answer rather than a concession: the globe further down stays the page's one
- * large visual moment instead of competing with something on the first screen.
  *
  * An earlier version opened with an example idea set at 140px, which read as
  * though the example *was* the company. A landing page has to answer "what is
  * this and why should I care" before it shows anything else; a demonstration is
  * evidence for a claim, and it cannot stand in for making the claim.
  *
- * The illustration behind the words is Magic UI's particle field, and it
- * replaced a hand-drawn brain. The brain was the honest reading of the brief --
- * ideas start in a head -- but a brain built from nodes and edges is precisely
- * the generic neural-network image the brief rules out, and every change that
- * made it less generic made it less like a brain. A slow drift of particles
- * says "thought, forming" without illustrating an organ, and it sits behind
- * type instead of competing with it.
+ * Four levels, in this order: headline, call to action, brain, particles. The
+ * brain is third deliberately. It sits in its own column at low contrast and
+ * barely moves, so it is read after the words rather than instead of them --
+ * and the particle field behind the whole page stays the motion layer.
+ *
+ * The split is the point: **the particles provide motion, the brain provides
+ * meaning.** Two things moving in one viewport compete, and the louder one wins.
  */
 export function Hero() {
   const reduced = usePrefersReducedMotion();
@@ -41,6 +37,18 @@ export function Hero() {
       id="top"
       className="relative flex min-h-[94svh] flex-col justify-center overflow-hidden pt-36 pb-28"
     >
+      {/*
+       * Level 3. Its own column so it never sits under the type, held at 60%
+       * opacity so it stays quieter than the call to action, and pinned to the
+       * page's own grid rather than floating in a box of its own.
+       */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] items-center justify-center pr-6 opacity-60 lg:flex lg:pr-10"
+        aria-hidden
+      >
+        <Brain className="w-full max-w-[26rem]" />
+      </div>
+
       <div className="relative mx-auto w-full max-w-[76rem] px-6 lg:px-10">
         <motion.p {...rise(0)} className="text-marker">
           Idea Reality Check
