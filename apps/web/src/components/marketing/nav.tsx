@@ -33,7 +33,7 @@ export function Nav() {
           : "border-b border-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-[76rem] items-center gap-8 px-6 py-4 lg:px-10">
+      <nav className="mx-auto flex max-w-[90rem] items-center gap-8 px-6 py-4 lg:px-10">
         <a href="#top" className="text-[15px] font-medium tracking-tight">
           Reality Check
         </a>

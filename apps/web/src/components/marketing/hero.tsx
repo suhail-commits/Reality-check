@@ -13,11 +13,24 @@ import { MagneticButton } from "./primitives";
  * this and why should I care" before it shows anything else; a demonstration is
  * evidence for a claim, and it cannot stand in for making the claim.
  *
- * Two columns: the words at 58%, the constellation at roughly 36% of the
- * viewport. It is a real focal point rather than a watermark, which is what the
- * previous two attempts got wrong -- a brain drawn as an outline is recognised
- * instantly and then finished, and a background layer alone left the right side
- * of the first screen empty.
+ * The grid is sized by the headline rather than by taste. At the 8rem cap
+ * "Tell us your idea." measures 884px, so a text column narrower than that
+ * cannot hold line one and the headline collapses into four cramped lines --
+ * which is what a 3fr/2fr split of 76rem (643px) did. The constellation has a
+ * floor of its own: its widest label, "Adjacent opportunity", overflows the
+ * canvas below 400px. 884 + 48 + 400 does not fit inside 76rem, so the hero and
+ * the nav share a wider 90rem measure than the sections below them.
+ *
+ * The headline's max-width is in em, not ch or px, so it tracks the clamped
+ * font size instead of fighting it: 7.5em sits inside the 6.9em-8.2em band where
+ * the intended break is the one the browser picks on its own. text-balance is
+ * deliberately absent -- balancing equalises line lengths, which is precisely
+ * how the four-line version came about.
+ *
+ * It is a real focal point rather than a watermark, which is what the previous
+ * two attempts got wrong -- a brain drawn as an outline is recognised instantly
+ * and then finished, and a background layer alone left the right side of the
+ * first screen empty.
  *
  * The constellation does not compete for the headline's job. It carries no
  * text, sits in sage at a fraction of the ink's contrast, and moves slowly
@@ -40,7 +53,7 @@ export function Hero() {
       id="top"
       className="relative flex min-h-[94svh] flex-col justify-center overflow-hidden pt-36 pb-28"
     >
-      <div className="relative mx-auto grid w-full max-w-[76rem] items-center gap-x-16 gap-y-14 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:px-10">
+      <div className="relative mx-auto grid w-full max-w-[90rem] items-center gap-x-12 gap-y-14 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:px-10 min-[1412px]:grid-cols-[minmax(0,56rem)_minmax(0,1fr)]">
         <div>
           <motion.p {...rise(0)} className="text-marker">
             Idea Reality Check
@@ -48,7 +61,7 @@ export function Hero() {
 
           <motion.h1
             {...rise(0.06)}
-            className="text-display-1 mt-8 max-w-[15ch] text-balance"
+            className="text-display-1 mt-8 max-w-[7.5em]"
           >
             Tell us your idea. We&rsquo;ll tell you where it works.
           </motion.h1>
@@ -86,7 +99,7 @@ export function Hero() {
         </div>
 
         <motion.div {...rise(0.22)} className="order-first lg:order-last">
-          <Constellation className="mx-auto aspect-[3/4] w-full max-w-[20rem] lg:max-w-none" />
+          <Constellation className="aspect-[5/4] w-full lg:aspect-[4/5] lg:max-h-[38rem]" />
         </motion.div>
       </div>
     </section>
