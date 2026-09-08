@@ -1,14 +1,12 @@
 import { CallToAction } from "@/components/marketing/cta";
-import { Exhibit } from "@/components/marketing/exhibit";
 import { SiteFooter } from "@/components/marketing/footer";
 import { Hero } from "@/components/marketing/hero";
+import { Investigation } from "@/components/marketing/investigation";
 import { Metrics } from "@/components/marketing/metrics";
-import { Narrative } from "@/components/marketing/narrative";
 import { Nav } from "@/components/marketing/nav";
 import { SignalRail } from "@/components/marketing/signal-rail";
 import { Sources } from "@/components/marketing/sources";
 import { IdeaTimeline } from "@/components/marketing/timeline";
-import { VerdictReveal } from "@/components/marketing/verdict";
 import { WorldImpact } from "@/components/marketing/world";
 
 /**
@@ -34,10 +32,7 @@ export default function Home() {
         <SignalRail />
         <IdeaTimeline />
 
-        <Exhibit>
-          <Narrative />
-          <VerdictReveal />
-        </Exhibit>
+        <Investigation />
 
         <Metrics />
         <WorldImpact />
