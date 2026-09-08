@@ -20,11 +20,19 @@
   --color-paper-sunk: #f3f2ee;
   --color-paper-warm: #f6f5f1;
   --color-glass: rgba(255, 255, 255, 0.72);
-  --color-rule: rgba(17, 17, 17, 0.1);
+  --color-rule: rgba(23, 59, 43, 0.12);
 
-  --color-ink: #111111;
-  --color-ink-soft: #55554f;
-  --color-ink-faint: #8c8c85;
+  /*
+   * Type is deep forest green rather than black. Four levels, and they are a
+   * hierarchy rather than a palette: 1 anchors a section, 2 carries prose, 3
+   * labels it, 4 dates it. Levels 3 and 4 sit below AA on this ground (3.21:1
+   * and 2.45:1), so nothing that has to be *read* is allowed to use them --
+   * descriptions stay on level 2, which clears it at 5.83:1.
+   */
+  --color-ink: #173b2b;
+  --color-ink-soft: #4f675a;
+  --color-ink-faint: #7e9086;
+  --color-ink-ghost: #98a49e;
 
   /* Structural only. Never used to report a result. */
   --color-sage: #5d7a63;
@@ -81,6 +89,14 @@
    as the size grows.
    --------------------------------------------------------------------------- */
 
+/*
+ * One scale for the whole page. Sizes step by roughly 1.4x, and tracking
+ * tightens as size grows, which is what stops large type reading as loose.
+ *
+ * display-1 stays at 8rem rather than dropping into the 80-110px band: the
+ * hero's three-line composition is pinned to this size against its column, and
+ * it is meant to be the strongest type on the site.
+ */
 @utility text-display-1 {
   font-size: clamp(3.25rem, 10vw, 8rem);
   line-height: 0.94;
@@ -95,27 +111,47 @@
   font-weight: 400;
 }
 
+/* Medium section headings, between a section anchor and a component title. */
+@utility text-display-3 {
+  font-size: clamp(2rem, 3.6vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.026em;
+  font-weight: 400;
+}
+
+/* Component and card titles. */
 @utility text-headline {
-  font-size: clamp(1.625rem, 3vw, 2.5rem);
-  line-height: 1.15;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1.2;
   letter-spacing: -0.018em;
   font-weight: 400;
 }
 
 @utility text-body-lg {
-  font-size: 1.1875rem;
-  line-height: 1.7;
+  font-size: 1.25rem;
+  line-height: 1.55;
+}
+
+/*
+ * Supporting copy. This exists because `text-caption` was carrying both the
+ * explanations and the metadata at 13px, which is why every aside on the page
+ * read as fine print. Anything a visitor is meant to *read* is this; only
+ * things they are meant to *check* stay on caption.
+ */
+@utility text-support {
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 @utility text-caption {
   font-size: 0.8125rem;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 /* An eyebrow that reads as a section marker rather than shouting. */
 @utility text-marker {
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
   line-height: 1.4;
   color: var(--color-sage);
 }

@@ -86,7 +86,7 @@ export function MagneticButton({
   };
 
   const base =
-    "relative inline-flex items-center justify-center rounded-full px-7 py-3.5 text-[15px] font-medium transition-colors duration-300";
+    "relative inline-flex items-center justify-center rounded-full px-8 py-4 text-[16px] font-medium transition-colors duration-300";
   const skin =
     variant === "primary"
       ? "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-sage)]"

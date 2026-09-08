@@ -81,14 +81,14 @@ export function Hero() {
             className="mt-14 flex flex-wrap items-center gap-6"
           >
             <MagneticButton href="#try">Check an idea</MagneticButton>
-            <span className="text-caption text-[var(--color-ink-faint)]">
+            <span className="text-support text-[var(--color-ink-soft)]">
               No account. No email. Nothing saved unless you share it.
             </span>
           </motion.div>
 
           <motion.div
             {...rise(0.4)}
-            className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-3 text-caption text-[var(--color-ink-faint)]"
+            className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-3 text-support text-[var(--color-ink-soft)]"
           >
             <span>Every answer ends somewhere you can go</span>
             <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />

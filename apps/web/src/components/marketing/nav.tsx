@@ -43,7 +43,7 @@ export function Nav() {
             <a
               key={link.href}
               href={link.href}
-              className="text-caption text-[var(--color-ink-soft)] transition-colors duration-200 hover:text-[var(--color-ink)]"
+              className="text-[15px] text-[var(--color-ink-soft)] transition-colors duration-200 hover:text-[var(--color-ink)]"
             >
               {link.label}
             </a>

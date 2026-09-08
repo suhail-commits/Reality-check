@@ -24,7 +24,7 @@ export function CallToAction() {
         <Validator />
       </div>
 
-      <p className="mt-8 text-caption text-[var(--color-ink-soft)]">
+      <p className="mt-8 text-support text-[var(--color-ink-soft)]">
         It is willing to say the idea does not work. Here is one where it says so:{" "}
         <Link
           href={`/v/${SHORTENER_VALIDATION.id}`}

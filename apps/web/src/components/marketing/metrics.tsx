@@ -61,7 +61,7 @@ export function Metrics() {
                 {metric.suffix}
               </p>
               <p className="mt-4 max-w-[34ch] text-body-lg text-balance">{metric.label}</p>
-              <p className="mt-3 max-w-[46ch] text-caption text-[var(--color-ink-soft)]">
+              <p className="mt-4 max-w-[48ch] text-support text-[var(--color-ink-soft)]">
                 {metric.note}
               </p>
             </div>

@@ -4,7 +4,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-[76rem] flex-col gap-8 px-6 py-14 lg:flex-row lg:items-end lg:px-10">
         <div className="max-w-[38ch]">
           <p className="text-[15px] font-medium">Reality Check</p>
-          <p className="mt-3 text-caption text-[var(--color-ink-soft)]">
+          <p className="mt-3 text-support text-[var(--color-ink-soft)]">
             The verdict is decided by a deterministic rubric, not by a language model. Any sentence
             the model writes that cannot be traced to a quote is dropped before you see it.
           </p>
@@ -19,7 +19,7 @@ export function SiteFooter() {
             <a
               key={link.href}
               href={link.href}
-              className="text-caption text-[var(--color-ink-soft)] transition-colors hover:text-[var(--color-ink)]"
+              className="text-[15px] text-[var(--color-ink-soft)] transition-colors hover:text-[var(--color-ink)]"
             >
               {link.label}
             </a>
