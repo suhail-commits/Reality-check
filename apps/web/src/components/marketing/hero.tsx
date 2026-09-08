@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { DURATION, EASE, usePrefersReducedMotion } from "@/lib/motion";
+import { Brain } from "./brain";
 import { MagneticButton } from "./primitives";
 
 /**
@@ -12,9 +13,10 @@ import { MagneticButton } from "./primitives";
  * this and why should I care" before it shows anything else; a demonstration is
  * evidence for a claim, and it cannot stand in for making the claim.
  *
- * The headline is the position, not a description. Every competitor in this
- * category is built to encourage you, so the one thing none of them can say is
- * the one thing worth putting first.
+ * The brain sits beside the words rather than behind them. Behind, it competes
+ * with the headline for the same pixels and both lose; beside, it reads as the
+ * subject of the sentence -- ideas start here, and by the bottom of the page
+ * they have reached the globe.
  */
 export function Hero() {
   const reduced = usePrefersReducedMotion();
@@ -22,7 +24,7 @@ export function Hero() {
     reduced
       ? {}
       : {
-          initial: { opacity: 0, y: 18, filter: "blur(8px)" },
+          initial: { opacity: 0, y: 18, filter: "blur(6px)" },
           animate: { opacity: 1, y: 0, filter: "blur(0px)" },
           transition: { duration: DURATION.reveal, ease: EASE.outExpo, delay },
         };
@@ -30,40 +32,53 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[92svh] flex-col justify-center pt-32 pb-24"
+      className="relative flex min-h-[94svh] flex-col justify-center pt-36 pb-28"
     >
-      <div className="mx-auto w-full max-w-[76rem] px-6 lg:px-10">
-        <motion.h1 {...rise(0)} className="text-display-1 max-w-[15ch] text-balance">
-          Tell us your idea. We&rsquo;ll tell you where it works.
-        </motion.h1>
+      <div className="mx-auto grid w-full max-w-[76rem] items-center gap-16 px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20 lg:px-10">
+        <div>
+          <motion.p {...rise(0)} className="text-marker">
+            Idea Reality Check
+          </motion.p>
 
-        <motion.p
-          {...rise(0.12)}
-          className="mt-10 max-w-[56ch] text-body-lg text-[var(--color-ink-soft)]"
-        >
-          Reality Check reads what people have actually written about your market and finds the
-          gap nobody has closed. If your idea is aimed at it, we say so. If it isn&rsquo;t, we
-          show you what is &mdash; and every word links back to the page it came from.
-        </motion.p>
+          <motion.h1 {...rise(0.06)} className="text-display-1 mt-8 max-w-[15ch] text-balance">
+            Tell us your idea. We&rsquo;ll tell you where it works.
+          </motion.h1>
 
-        <motion.div {...rise(0.24)} className="mt-12 flex flex-wrap items-center gap-6">
-          <MagneticButton href="#try">Check an idea</MagneticButton>
-          <span className="text-caption text-[var(--color-ink-faint)]">
-            No account. No email. Nothing saved unless you share it.
-          </span>
-        </motion.div>
+          <motion.p
+            {...rise(0.16)}
+            className="mt-10 max-w-[54ch] text-body-lg text-[var(--color-ink-soft)]"
+          >
+            Reality Check reads what people have actually written about your market and finds the
+            gap nobody has closed. If your idea is aimed at it, we say so. If it isn&rsquo;t, we
+            show you what is &mdash; and every word links back to the page it came from.
+          </motion.p>
+
+          <motion.div {...rise(0.26)} className="mt-14 flex flex-wrap items-center gap-6">
+            <MagneticButton href="#try">Check an idea</MagneticButton>
+            <span className="text-caption text-[var(--color-ink-faint)]">
+              No account. No email. Nothing saved unless you share it.
+            </span>
+          </motion.div>
+        </div>
 
         <motion.div
-          {...rise(0.36)}
-          className="mt-24 flex flex-wrap items-center gap-x-8 gap-y-3 text-caption text-[var(--color-ink-faint)]"
+          {...rise(0.2)}
+          className="relative order-first aspect-square w-full lg:order-last"
         >
-          <span>Every answer ends somewhere you can go</span>
-          <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
-          <span>We say how sure we are, and why</span>
-          <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
-          <span>Checked against markets whose outcome we already know</span>
+          <Brain className="absolute inset-0" />
         </motion.div>
       </div>
+
+      <motion.div
+        {...rise(0.4)}
+        className="mx-auto mt-24 flex w-full max-w-[76rem] flex-wrap items-center gap-x-10 gap-y-3 px-6 text-caption text-[var(--color-ink-faint)] lg:px-10"
+      >
+        <span>Every answer ends somewhere you can go</span>
+        <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
+        <span>We say how sure we are, and why</span>
+        <span className="hidden h-3 w-px bg-[var(--color-rule)] sm:block" />
+        <span>Checked against markets whose outcome we already know</span>
+      </motion.div>
     </section>
   );
 }

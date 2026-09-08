@@ -43,8 +43,9 @@ const METRICS = [
 
 export function Metrics() {
   return (
-    <section id="metrics" className="mx-auto w-full max-w-[76rem] px-6 py-32 lg:px-10">
-      <div className="grid gap-x-16 gap-y-16 lg:grid-cols-2">
+    <section id="metrics" className="mx-auto w-full max-w-[76rem] px-6 py-32 lg:px-10 lg:py-44">
+      <p className="text-marker mb-16">What holds it up</p>
+      <div className="grid gap-x-20 gap-y-24 lg:grid-cols-2">
         {METRICS.map((metric, i) => (
           <Reveal key={metric.label} delay={i * 0.08}>
             <div className={metric.lead ? "lg:col-span-2" : ""}>

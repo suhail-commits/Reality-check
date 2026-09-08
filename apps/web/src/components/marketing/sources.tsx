@@ -53,7 +53,7 @@ function Row() {
 
 export function Sources() {
   return (
-    <section className="border-y border-[var(--color-rule)] py-10">
+    <section className="border-y border-[var(--color-rule)] py-14">
       <p className="mx-auto mb-8 max-w-[76rem] px-6 text-caption text-[var(--color-ink-soft)] lg:px-10">
         Every claim comes from one of these. Two are connected today.
       </p>

@@ -1,32 +1,43 @@
 @import "tailwindcss";
 
 /*
- * One token system for the whole site, now permanently dark.
+ * One token system for the whole site. The names are the ones the app already
+ * used -- ink is text, paper is ground -- so every existing component keeps
+ * working untouched. Only the values changed, from near-black to ivory.
  *
- * The names are the ones the app already used -- ink is text, paper is ground --
- * so the verdict card, evidence list and validator keep working untouched. Only
- * the values changed. Introducing a second parallel palette for the marketing
- * page would have meant every shared component rendering invisible text on the
- * homepage and correct text on /v/[id].
+ * Two rules hold the palette together:
  *
- * The rule the design depends on: the page has no accent colour until the
- * verdict resolves. Every glow, highlight and focus ring derives from --accent,
- * so one assignment changes the temperature of the entire page.
+ * 1. **Sage is structural, never stateful.** Rules, node lines, globe geometry
+ *    and timeline spines are sage. Nothing that reports a *result* is, because
+ *    the four verdict hues are the only saturated colour on the page and one of
+ *    them is already green. A sage page that also uses green to mean "build it"
+ *    would make the verdict colour mean nothing.
+ * 2. **--accent still only ever means a verdict**, and is still scoped to the
+ *    exhibit rather than the document.
  */
 @theme {
-  --color-paper: #050505;
-  --color-paper-sunk: #0c0d0f;
-  --color-glass: rgba(255, 255, 255, 0.035);
-  --color-rule: rgba(255, 255, 255, 0.09);
+  --color-paper: #faf9f6;
+  --color-paper-sunk: #f3f2ee;
+  --color-paper-warm: #f6f5f1;
+  --color-glass: rgba(255, 255, 255, 0.72);
+  --color-rule: rgba(17, 17, 17, 0.1);
 
-  --color-ink: #f2f3f5;
-  --color-ink-soft: #9ba1a9;
-  --color-ink-faint: #5c626b;
+  --color-ink: #111111;
+  --color-ink-soft: #55554f;
+  --color-ink-faint: #8c8c85;
 
-  --color-build: oklch(0.68 0.15 155);
-  --color-differently: oklch(0.78 0.15 75);
-  --color-dont: oklch(0.65 0.19 25);
-  --color-findout: oklch(0.68 0.11 245);
+  /* Structural only. Never used to report a result. */
+  --color-sage: #5d7a63;
+  --color-sage-mid: #7e9b85;
+  --color-sage-light: #a5b8a5;
+  --color-sage-wash: #d8e0d8;
+  --color-sage-mist: #e8ece8;
+
+  /* Retuned for an ivory ground: darker and more saturated than the dark set. */
+  --color-build: oklch(0.51 0.11 155);
+  --color-differently: oklch(0.58 0.12 68);
+  --color-dont: oklch(0.51 0.17 27);
+  --color-findout: oklch(0.5 0.1 245);
 
   --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", Menlo, monospace;
@@ -39,7 +50,7 @@
   :root {
     /* Deliberately not a colour. The page is undecided. */
     --accent: var(--color-ink-faint);
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   html {
@@ -55,107 +66,133 @@
   }
 
   ::selection {
-    background: var(--accent);
-    color: var(--color-paper);
+    background: var(--color-sage-wash);
+    color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--color-sage);
     outline-offset: 3px;
   }
 }
 
 /* ---------------------------------------------------------------------------
-   Type scale. Tracking tightens as size grows, because letterspacing that reads
-   as normal at 16px reads as loose at 140px.
+   Type. Editorial rather than dense: larger sizes, more air, tighter tracking
+   as the size grows.
    --------------------------------------------------------------------------- */
 
 @utility text-display-1 {
-  font-size: clamp(3.5rem, 11vw, 8.75rem);
-  line-height: 0.92;
-  letter-spacing: -0.045em;
-  font-weight: 500;
+  font-size: clamp(3.25rem, 10vw, 8rem);
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  font-weight: 400;
 }
 
 @utility text-display-2 {
-  font-size: clamp(2.75rem, 7vw, 5.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  font-weight: 500;
+  font-size: clamp(2.5rem, 6.5vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.032em;
+  font-weight: 400;
 }
 
 @utility text-headline {
-  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  font-weight: 500;
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  font-weight: 400;
 }
 
 @utility text-body-lg {
   font-size: 1.1875rem;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 @utility text-caption {
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+/* An eyebrow that reads as a section marker rather than shouting. */
+@utility text-marker {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  color: var(--color-sage);
 }
 
 /* ---------------------------------------------------------------------------
-   Surfaces
+   Surfaces. Paper, not glass.
    --------------------------------------------------------------------------- */
 
 @utility glass {
   background: var(--color-glass);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--color-rule);
-  border-radius: 16px;
+  border-radius: 14px;
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    0 24px 64px -24px rgba(0, 0, 0, 0.8);
+    0 1px 2px rgba(17, 17, 17, 0.04),
+    0 12px 32px -20px rgba(17, 17, 17, 0.12);
 }
 
-/* Ambient light, tinted by whatever the page currently believes. */
+/*
+ * A note someone left on a desk. The rotation is tiny on purpose -- enough to
+ * read as a physical object, not enough to look like a scrapbook.
+ */
+@utility paper {
+  background: #fffefb;
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  box-shadow:
+    0 1px 1px rgba(17, 17, 17, 0.03),
+    0 10px 28px -18px rgba(17, 17, 17, 0.18);
+  transition:
+    transform 480ms var(--ease-out-expo),
+    box-shadow 480ms var(--ease-out-expo);
+}
+
+@utility paper-lift {
+  transform: translateY(-3px) rotate(0deg) !important;
+  box-shadow:
+    0 2px 3px rgba(17, 17, 17, 0.04),
+    0 22px 48px -22px rgba(17, 17, 17, 0.22);
+}
+
+/* Ambient warmth. Far quieter than the glow it replaces. */
 @utility ambient {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(
-      60rem 40rem at 15% -10%,
-      color-mix(in oklch, var(--accent) 7%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      50rem 36rem at 90% 110%,
-      color-mix(in oklch, var(--accent) 4%, transparent),
-      transparent 70%
-    );
-  transition: background 900ms var(--ease-out-expo);
+    radial-gradient(70rem 44rem at 12% -8%, var(--color-sage-mist), transparent 68%),
+    radial-gradient(56rem 40rem at 92% 108%, var(--color-paper-warm), transparent 70%);
 }
 
+/* Paper tooth, not film noise. */
 @utility grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* A hairline that fades at both ends, so it reads as a horizon not a border. */
 @utility rule-fade {
   height: 1px;
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-rule) 20%,
-    var(--color-rule) 80%,
+    var(--color-sage-light) 20%,
+    var(--color-sage-light) 80%,
     transparent
   );
 }
+
+/* ---------------------------------------------------------------------------
+   Motion. Fade, scale, reveal, depth. No bounce, no elastic.
+   --------------------------------------------------------------------------- */
 
 @keyframes caret {
   0%,
@@ -182,10 +219,9 @@
 }
 
 @utility animate-marquee {
-  animation: marquee 38s linear infinite;
+  animation: marquee 44s linear infinite;
 }
 
-/* Trace lines land one after another rather than appearing all at once. */
 @keyframes trace-in {
   from {
     opacity: 0;
@@ -215,9 +251,118 @@
   animation: pulse-dot 1.1s ease-in-out infinite;
 }
 
+/* A neuron waking up, then settling. */
+@keyframes neuron {
+  0%,
+  100% {
+    opacity: 0.25;
+    r: 2;
+  }
+  50% {
+    opacity: 1;
+    r: 3.4;
+  }
+}
+
+@utility animate-neuron {
+  animation: neuron 5.5s ease-in-out infinite;
+}
+
+/* A signal running the length of a connection. */
+@keyframes signal {
+  0% {
+    stroke-dashoffset: var(--len, 200);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    stroke-dashoffset: calc(var(--len, 200) * -1);
+    opacity: 0;
+  }
+}
+
+@utility animate-signal {
+  animation: signal 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* An idea leaving the brain: rises, spreads, fades. */
+@keyframes drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.6);
+  }
+  18% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--dx, 0), var(--dy, -220px), 0) scale(1);
+  }
+}
+
+@utility animate-drift {
+  animation: drift 14s cubic-bezier(0.32, 0, 0.36, 1) infinite;
+}
+
+/* A path lighting up from origin to destination. */
+@keyframes trace-path {
+  0% {
+    stroke-dashoffset: var(--len, 400);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.75;
+  }
+  85% {
+    opacity: 0.75;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+@utility animate-trace-path {
+  animation: trace-path 7s cubic-bezier(0.33, 0, 0.2, 1) infinite;
+}
+
+@keyframes landfall {
+  0%,
+  62% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  76% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+}
+
+@utility animate-landfall {
+  animation: landfall 7s ease-out infinite;
+}
+
+@keyframes globe-turn {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Reduced motion is not a degraded path here -- it is the fallback design.
-   Every pin is disabled in JS; this handles the CSS half.
+   The illustrations stay; only their movement stops.
    --------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -228,5 +373,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .animate-drift,
+  .animate-signal,
+  .animate-trace-path {
+    opacity: 0.5 !important;
   }
 }

@@ -12,7 +12,7 @@ import { SHORTENER_VALIDATION } from "@/fixtures/sample";
  */
 export function CallToAction() {
   return (
-    <section id="try" className="mx-auto w-full max-w-[76rem] px-6 py-32 lg:px-10">
+    <section id="try" className="mx-auto w-full max-w-[76rem] px-6 py-32 lg:px-10 lg:py-44">
       <div className="mb-12 max-w-[34ch]">
         <h2 className="text-display-2 text-balance">Now do yours.</h2>
         <p className="mt-6 text-body-lg text-[var(--color-ink-soft)]">
@@ -20,7 +20,7 @@ export function CallToAction() {
         </p>
       </div>
 
-      <div className="glass p-6 sm:p-10">
+      <div className="paper p-8 sm:p-12">
         <Validator />
       </div>
 

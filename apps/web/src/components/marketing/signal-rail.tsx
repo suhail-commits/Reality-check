@@ -101,7 +101,8 @@ export function SignalRail() {
   return (
     <section id="method" ref={section} className="relative overflow-hidden py-24 lg:py-0">
       <div className="mx-auto max-w-[76rem] px-6 lg:px-10">
-        <h2 className="text-headline mb-6 max-w-[20ch] text-balance lg:pt-32">
+        <p className="text-marker mb-6 lg:pt-36">How it decides</p>
+        <h2 className="text-display-2 mb-6 max-w-[18ch] text-balance">
           Four questions, asked the same way every time.
         </h2>
         <p className="mb-12 max-w-[58ch] text-body-lg text-[var(--color-ink-soft)]">
@@ -114,13 +115,14 @@ export function SignalRail() {
         ref={track}
         className="flex flex-col gap-6 px-6 lg:w-max lg:flex-row lg:gap-8 lg:px-10 lg:pb-32"
       >
-        {SIGNALS.map((signal) => (
+        {SIGNALS.map((signal, i) => (
           <article
             key={signal.question}
-            className="signal-card glass flex flex-col p-8 lg:h-[22rem] lg:w-[26rem]"
+            style={{ transform: `rotate(${(i % 2 === 0 ? -1 : 1) * (0.5 + (i % 3) * 0.35)}deg)` }}
+            className="signal-card paper flex flex-col p-9 hover:paper-lift lg:h-[23rem] lg:w-[27rem]"
           >
             <p className="text-body-lg text-balance">{signal.question}</p>
-            <p className="mt-auto pt-10 text-display-2 tabular-nums">
+            <p className="mt-auto pt-10 text-display-2 tabular-nums text-[var(--color-sage)]">
               {signal.value}
             </p>
             <p className="mt-4 text-caption text-[var(--color-ink-soft)]">{signal.detail}</p>

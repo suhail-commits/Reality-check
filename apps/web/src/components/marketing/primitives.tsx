@@ -86,15 +86,17 @@ export function MagneticButton({
   };
 
   const base =
-    "relative inline-flex items-center justify-center rounded-full px-6 py-3 text-[15px] font-medium transition-colors duration-200";
+    "relative inline-flex items-center justify-center rounded-full px-7 py-3.5 text-[15px] font-medium transition-colors duration-300";
   const skin =
     variant === "primary"
-      ? "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-white"
-      : "border border-[var(--color-rule)] text-[var(--color-ink)] hover:border-[var(--accent)]";
+      ? "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-[var(--color-sage)]"
+      : "border border-[var(--color-rule)] text-[var(--color-ink)] hover:border-[var(--color-sage)]";
 
+  // A halo the colour of the paper's own tint, not a glow. On ivory a bloom
+  // reads as a smudge; a soft shadow reads as the button lifting off the page.
   const glow =
     variant === "primary"
-      ? "after:absolute after:inset-0 after:-z-10 after:rounded-full after:bg-[var(--accent)] after:opacity-0 after:blur-xl after:transition-opacity after:duration-300 hover:after:opacity-40"
+      ? "after:absolute after:inset-0 after:-z-10 after:rounded-full after:bg-[var(--color-sage-wash)] after:opacity-0 after:blur-lg after:transition-opacity after:duration-300 hover:after:opacity-90"
       : "";
 
   const props = {
@@ -177,7 +179,7 @@ export function EvidenceCard({ evidence, index }: { evidence: Evidence; index: n
 
   return (
     <Reveal delay={index * 0.08}>
-      <GlassPanel className="p-5">
+      <div className="paper p-6 hover:paper-lift">
         <p className="font-mono text-[0.9375rem] leading-relaxed text-[var(--color-ink)]">
           &ldquo;{evidence.quote}&rdquo;
         </p>
@@ -194,7 +196,7 @@ export function EvidenceCard({ evidence, index }: { evidence: Evidence; index: n
             {evidence.id}
           </a>
         </div>
-      </GlassPanel>
+      </div>
     </Reveal>
   );
 }

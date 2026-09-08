@@ -22,10 +22,10 @@ export function Exhibit({ children }: { children: React.ReactNode }) {
   const { ideaText, ideaSpec, createdAt } = DOG_VALIDATION;
 
   return (
-    <section id="example" className="mx-auto w-full max-w-[76rem] px-6 py-24 lg:px-10">
+    <section id="example" className="mx-auto w-full max-w-[76rem] px-6 py-24 lg:px-10 lg:py-32">
       <div
         data-exhibit
-        className="overflow-hidden rounded-[20px] border border-[var(--color-rule)] bg-[var(--color-paper-sunk)]"
+        className="overflow-hidden rounded-[18px] border border-[var(--color-rule)] bg-[var(--color-paper-warm)] shadow-[0_1px_2px_rgba(17,17,17,0.03),0_28px_64px_-40px_rgba(17,17,17,0.16)]"
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[var(--color-rule)] px-6 py-4 lg:px-10">
           <span className="text-caption font-medium text-[var(--color-ink)]">

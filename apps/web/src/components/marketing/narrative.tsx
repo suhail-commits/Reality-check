@@ -75,7 +75,7 @@ function Act({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
     <section
       id={id}
-      className="border-b border-[var(--color-rule)] px-6 py-20 lg:px-10 lg:py-24"
+      className="border-b border-[var(--color-rule)] px-6 py-24 lg:px-12 lg:py-32"
     >
       <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
         {children}

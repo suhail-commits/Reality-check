@@ -5,23 +5,25 @@ import { Hero } from "@/components/marketing/hero";
 import { Metrics } from "@/components/marketing/metrics";
 import { Narrative } from "@/components/marketing/narrative";
 import { Nav } from "@/components/marketing/nav";
+import { NeuralBackground } from "@/components/marketing/neural-bg";
 import { SignalRail } from "@/components/marketing/signal-rail";
 import { Sources } from "@/components/marketing/sources";
+import { IdeaTimeline } from "@/components/marketing/timeline";
 import { VerdictReveal } from "@/components/marketing/verdict";
+import { WorldImpact } from "@/components/marketing/world";
 
 /**
- * Claim, then method, then proof.
+ * Claim, then method, then proof -- and underneath it, one continuous picture.
  *
- * The hero says what this is. The four questions say how it decides. Only then
- * does a worked example appear, inside a frame that makes plain it is somebody
- * else's idea rather than ours -- an earlier version opened with that example at
- * full size and read as though we sold a dog-walking app.
+ * The illustrations are a single argument told in three parts. A brain in the
+ * hero, where ideas start. A timeline where one grows. A globe at the end,
+ * where it lands. They share a vocabulary of nodes and connections on purpose,
+ * so they read as the same thing at three sizes rather than as three separate
+ * decorations.
  *
- * Colour is reserved: nothing outside the exhibit uses a verdict colour, so on
- * this site colour only ever means a decision was reached.
- *
- * Nothing here claims anything it cannot cite, and there is no customer logo
- * wall, because there are no customers.
+ * The written content is unchanged. The order is unchanged. What moved is the
+ * amount of air around it: every section is now given room to be read rather
+ * than packed against the next one.
  */
 export default function Home() {
   return (
@@ -29,12 +31,33 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <SignalRail />
+
+        {/*
+         * The quiet sections carry the network layer. It sits behind the sparse
+         * parts of the page, where there is room for depth, and stays out of the
+         * dense ones, where it would only add noise.
+         */}
+        <div className="relative">
+          <NeuralBackground />
+          <div className="relative">
+            <SignalRail />
+            <IdeaTimeline />
+          </div>
+        </div>
+
         <Exhibit>
           <Narrative />
           <VerdictReveal />
         </Exhibit>
-        <Metrics />
+
+        <div className="relative">
+          <NeuralBackground />
+          <div className="relative">
+            <Metrics />
+            <WorldImpact />
+          </div>
+        </div>
+
         <Sources />
         <CallToAction />
       </main>
